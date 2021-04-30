@@ -1,6 +1,6 @@
 object Libs {
     private const val kotlinVersion = "1.4.32"
-    private const val hiltVersion = "2.33-beta"
+    private const val hiltVersion = "2.35.1"
     private const val navVersion = "2.3.5"
 
     object Gradle {

@@ -2,7 +2,7 @@
 
 ## Architecture Explanation
 
-I choose to modularize just the project layers instead of the features because there were just two screens and there are no plans to add more. I focused on ease to maintain and on Clean Architecture principles.
+I choose to modularize just the project layers instead of the features because there were not that many features and there are no plans to add more. I focused on ease to maintain and on Clean Architecture principles.
 
 <p align="middle">
     <img src="./resources/architecture.png">

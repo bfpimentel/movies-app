@@ -1,7 +1,7 @@
 import org.gradle.api.JavaVersion
 
 object Config {
-    const val applicationId = "dev.pimentel.template"
+    const val applicationId = "dev.pimentel.series"
 
     object Versions {
         private const val major = 0
