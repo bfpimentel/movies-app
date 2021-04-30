@@ -3,7 +3,7 @@ package dev.pimentel.series.data.sources.local
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class ExampleLocalDataSourceTest {
+class SeriesLocalDataSourceTest {
 
     private val dataSource: ExampleLocalDataSource = ExampleLocalDataSource()
 

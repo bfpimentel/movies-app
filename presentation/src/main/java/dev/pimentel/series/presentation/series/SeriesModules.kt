@@ -1,6 +1,6 @@
-package dev.pimentel.series.presentation.example
+package dev.pimentel.series.presentation.series
 
-import dev.pimentel.series.presentation.example.data.ExampleState
+import dev.pimentel.series.presentation.series.data.SeriesState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object WelcomeViewModelModule {
     @Provides
     @ViewModelScoped
     @WelcomeStateQualifier
-    fun provideInitialState(): ExampleState = ExampleState()
+    fun provideInitialState(): SeriesState = SeriesState()
 }
 
 @Qualifier

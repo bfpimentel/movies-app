@@ -1,11 +1,11 @@
-package dev.pimentel.series.presentation.example
+package dev.pimentel.series.presentation.series
 
 import dev.pimentel.series.ViewModelTest
-import dev.pimentel.series.domain.entity.Example
-import dev.pimentel.series.domain.usecase.GetExample
+import dev.pimentel.series.domain.entity.Series
+import dev.pimentel.series.domain.usecase.GetSeries
 import dev.pimentel.series.domain.usecase.NoParams
-import dev.pimentel.series.presentation.example.data.ExampleIntention
-import dev.pimentel.series.presentation.example.data.ExampleState
+import dev.pimentel.series.presentation.series.data.SeriesIntention
+import dev.pimentel.series.presentation.series.data.SeriesState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -15,22 +15,22 @@ import kotlinx.coroutines.launch
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class ExampleViewModelTest : ViewModelTest() {
+class SeriesViewModelTest : ViewModelTest() {
 
-    private val getExample = mockk<GetExample>()
+    private val getExample = mockk<GetSeries>()
 
     @Test
     fun `should get example`() = runBlockingTest {
-        val example = Example(value = "value")
+        val example = Series(value = "value")
 
         coEvery { getExample(NoParams) } returns example
 
         val viewModel = getViewModelInstance()
 
-        val exampleStateValues = arrayListOf<ExampleState>()
+        val exampleStateValues = arrayListOf<SeriesState>()
         val exampleStateJob = launch { viewModel.state.toList(exampleStateValues) }
 
-        viewModel.publish(ExampleIntention.GetExample)
+        viewModel.publish(SeriesIntention.SearchSeries)
 
         val firstExampleState = exampleStateValues[0]
         assertEquals(firstExampleState, initialState)
@@ -43,8 +43,8 @@ class ExampleViewModelTest : ViewModelTest() {
         exampleStateJob.cancel()
     }
 
-    private fun getViewModelInstance(): ExampleContract.ViewModel =
-        ExampleViewModel(
+    private fun getViewModelInstance(): SeriesContract.ViewModel =
+        SeriesViewModel(
             dispatchersProvider = dispatchersProvider,
             getExample = getExample,
             initialState = initialState
@@ -55,6 +55,6 @@ class ExampleViewModelTest : ViewModelTest() {
     }
 
     private companion object {
-        val initialState = ExampleState()
+        val initialState = SeriesState()
     }
 }

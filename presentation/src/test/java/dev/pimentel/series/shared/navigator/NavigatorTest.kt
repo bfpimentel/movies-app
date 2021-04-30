@@ -3,7 +3,7 @@ package dev.pimentel.series.shared.navigator
 import androidx.navigation.NavController
 import dev.pimentel.series.R
 import dev.pimentel.series.TestDispatchersProvider
-import dev.pimentel.series.presentation.example.ExampleFragmentDirections
+import dev.pimentel.series.presentation.series.ExampleFragmentDirections
 import dev.pimentel.series.shared.dispatchers.DispatchersProvider
 import io.mockk.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher

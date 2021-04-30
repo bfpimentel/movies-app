@@ -1,4 +1,4 @@
-package dev.pimentel.series.presentation.example
+package dev.pimentel.series.presentation.series
 
 import android.os.Bundle
 import android.view.View
@@ -7,14 +7,14 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.series.R
 import dev.pimentel.series.databinding.ExampleFragmentBinding
-import dev.pimentel.series.presentation.example.data.ExampleIntention
+import dev.pimentel.series.presentation.series.data.SeriesIntention
 import dev.pimentel.series.shared.extensions.watch
 
 @AndroidEntryPoint
-class ExampleFragment : Fragment(R.layout.example_fragment) {
+class SeriesFragment : Fragment(R.layout.example_fragment) {
 
     private lateinit var binding: ExampleFragmentBinding
-    private val viewModel: ExampleContract.ViewModel by viewModels<ExampleViewModel>()
+    private val viewModel: SeriesContract.ViewModel by viewModels<SeriesViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +31,6 @@ class ExampleFragment : Fragment(R.layout.example_fragment) {
     }
 
     private fun bindInputs() {
-        viewModel.publish(ExampleIntention.GetExample)
+//        viewModel.publish(SeriesIntention.SearchSeries)
     }
 }
