@@ -87,7 +87,13 @@ object DataModules {
     // region REPOSITORY
     @Provides
     @Singleton
-    fun provideShowsRepository(showsRemoteDataSource: ShowsRemoteDataSource): ShowsRepository =
-        ShowsRepositoryImpl(showsRemoteDataSource = showsRemoteDataSource)
+    fun provideShowsRepository(
+        showsRemoteDataSource: ShowsRemoteDataSource,
+        showsLocalDataSource: ShowsLocalDataSource
+    ): ShowsRepository =
+        ShowsRepositoryImpl(
+            showsRemoteDataSource = showsRemoteDataSource,
+            showsLocalDataSource = showsLocalDataSource
+        )
     // endregion
 }

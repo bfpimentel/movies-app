@@ -9,7 +9,7 @@ import dev.pimentel.series.data.dto.ShowDTO
 interface ShowsLocalDataSource {
 
     @Insert
-    suspend fun insertShows(shows: List<ShowDTO>)
+    suspend fun saveShows(shows: List<ShowDTO>)
 
     @Query(
         """

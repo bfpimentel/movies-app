@@ -1,6 +1,6 @@
 package dev.pimentel.series.domain.entity
 
-data class Series(
+data class Show(
     val id: Int,
     val name: String
 )

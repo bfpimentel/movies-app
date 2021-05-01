@@ -1,10 +1,8 @@
 package dev.pimentel.series.domain.repository
 
-import dev.pimentel.series.domain.model.ShowsModel
-import kotlinx.coroutines.flow.Flow
+import dev.pimentel.series.domain.model.ShowModel
 
 interface ShowsRepository {
-    fun getSeries(): Flow<List<ShowsModel>>
-    suspend fun getMoreSeries(nextPage: Int)
-    suspend fun searchSeries(query: String?): List<ShowsModel>
+    suspend fun getShows(page: Int): List<ShowModel>
+    suspend fun searchShows(query: String): List<ShowModel>
 }

@@ -1,8 +1,8 @@
 package dev.pimentel.series.presentation.series
 
 import dev.pimentel.series.ViewModelTest
-import dev.pimentel.series.domain.entity.Series
-import dev.pimentel.series.domain.usecase.GetSeries
+import dev.pimentel.series.domain.entity.Show
+import dev.pimentel.series.domain.usecase.GetShows
 import dev.pimentel.series.domain.usecase.NoParams
 import dev.pimentel.series.presentation.series.data.SeriesIntention
 import dev.pimentel.series.presentation.series.data.SeriesState
@@ -15,13 +15,13 @@ import kotlinx.coroutines.launch
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class SeriesViewModelTest : ViewModelTest() {
+class ShowsViewModelTest : ViewModelTest() {
 
-    private val getExample = mockk<GetSeries>()
+    private val getExample = mockk<GetShows>()
 
     @Test
     fun `should get example`() = runBlockingTest {
-        val example = Series(value = "value")
+        val example = Show(value = "value")
 
         coEvery { getExample(NoParams) } returns example
 
