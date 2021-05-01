@@ -1,8 +1,8 @@
 package dev.pimentel.series.data.model
 
-import dev.pimentel.series.domain.model.SeriesModel
+import dev.pimentel.series.domain.model.ShowsModel
 
-data class SeriesModelImpl(
+data class ShowsModelImpl(
     override val id: Int,
     override val name: String
-) : SeriesModel
+) : ShowsModel

@@ -1,8 +1,8 @@
 package dev.pimentel.series.domain.usecase
 
 import dev.pimentel.series.domain.entity.Series
-import dev.pimentel.series.domain.model.SeriesModel
-import dev.pimentel.series.domain.repository.SeriesRepository
+import dev.pimentel.series.domain.model.ShowsModel
+import dev.pimentel.series.domain.repository.ShowsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test
 
 class GetSeriesTest {
 
-    private val exampleRepository = mockk<SeriesRepository>()
+    private val exampleRepository = mockk<ShowsRepository>()
     private val useCase = GetSeries(exampleRepository)
 
     @Test
     fun `should get example and map it to entity`() = runBlockingTest {
-        val exampleModel = object : SeriesModel {
+        val exampleModel = object : ShowsModel {
             override val value: String = "value"
         }
 

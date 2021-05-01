@@ -44,6 +44,7 @@ dependencies {
     api(Libs.Networking.retrofit)
     api(Libs.Networking.retrofitMoshi)
     api(Libs.Networking.interceptor)
+    api("androidx.paging:paging-runtime:3.0.0-rc01")
 
     api(Libs.Room.runtime)
     implementation(Libs.Room.ktx)

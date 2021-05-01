@@ -2,6 +2,7 @@ package dev.pimentel.series.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -10,9 +11,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.pimentel.series.data.R
-import dev.pimentel.series.data.repository.SeriesRepositoryImpl
-import dev.pimentel.series.data.sources.remote.SeriesRemoteDataSource
-import dev.pimentel.series.domain.repository.SeriesRepository
+import dev.pimentel.series.data.database.SeriesDatabase
+import dev.pimentel.series.data.repository.ShowsRepositoryImpl
+import dev.pimentel.series.data.sources.local.ShowsLocalDataSource
+import dev.pimentel.series.data.sources.remote.ShowsRemoteDataSource
+import dev.pimentel.series.domain.repository.ShowsRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,10 +39,7 @@ object DataModules {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        @ApplicationContext context: Context,
-        moshi: Moshi
-    ): Retrofit {
+    fun provideRetrofit(@ApplicationContext context: Context, moshi: Moshi): Retrofit {
         val apiUrl = context.getString(R.string.api_url)
 
         val client = OkHttpClient.Builder()
@@ -47,9 +47,7 @@ object DataModules {
             .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
+                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
             )
             .build()
 
@@ -62,21 +60,34 @@ object DataModules {
 
     @Provides
     @Singleton
-    fun provideSeriesRemoteDataSource(retrofit: Retrofit) =
-        retrofit.create<SeriesRemoteDataSource>()
+    fun provideShowsRemoteDataSource(retrofit: Retrofit): ShowsRemoteDataSource = retrofit.create()
     // endregion
 
     // region LOCAL
     @Provides
     @Singleton
+    fun provideDatabase(@ApplicationContext context: Context) =
+        Room.databaseBuilder(
+            context,
+            SeriesDatabase::class.java,
+            SeriesDatabase::class.simpleName!!
+        ).build()
+
+    @Provides
+    @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun provideShowsLocalDataSource(seriesDatabase: SeriesDatabase): ShowsLocalDataSource =
+        seriesDatabase.createShowsLocalDataSource()
     // endregion
 
     // region REPOSITORY
     @Provides
     @Singleton
-    fun provideSeriesRepository(seriesRemoteDataSource: SeriesRemoteDataSource): SeriesRepository =
-        SeriesRepositoryImpl(seriesRemoteDataSource = seriesRemoteDataSource)
+    fun provideShowsRepository(showsRemoteDataSource: ShowsRemoteDataSource): ShowsRepository =
+        ShowsRepositoryImpl(showsRemoteDataSource = showsRemoteDataSource)
     // endregion
 }

@@ -1,8 +1,8 @@
 package dev.pimentel.series.data.repository
 
-import dev.pimentel.series.data.model.SeriesModelImpl
-import dev.pimentel.series.domain.model.SeriesModel
-import dev.pimentel.series.domain.repository.SeriesRepository
+import dev.pimentel.series.data.model.ShowsModelImpl
+import dev.pimentel.series.domain.model.ShowsModel
+import dev.pimentel.series.domain.repository.ShowsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -11,19 +11,19 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class SeriesRepositoryTest {
+class ShowsRepositoryTest {
 
     private val exampleLocalDataSource = mockk<ExampleLocalDataSource>()
-    private val repository: SeriesRepository = SeriesRepositoryImpl(exampleLocalDataSource)
+    private val repository: ShowsRepository = ShowsRepositoryImpl(exampleLocalDataSource)
 
     @Test
     fun `should get example`() = runBlockingTest {
         val example = "value"
-        val seriesModel: SeriesModel = SeriesModelImpl(value = example)
+        val showsModel: ShowsModel = ShowsModelImpl(value = example)
 
         coEvery { exampleLocalDataSource.getExample() } returns example
 
-        assertEquals(repository.getSeries(), seriesModel)
+        assertEquals(repository.getSeries(), showsModel)
 
         coVerify(exactly = 1) { exampleLocalDataSource.getExample() }
         confirmEverythingVerified()

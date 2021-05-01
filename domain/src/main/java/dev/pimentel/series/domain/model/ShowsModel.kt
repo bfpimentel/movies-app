@@ -1,6 +1,6 @@
 package dev.pimentel.series.domain.model
 
-interface SeriesModel {
+interface ShowsModel {
     val id: Int
     val name: String
 }
