@@ -7,7 +7,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dev.pimentel.series.domain.repository.ShowsRepository
 import dev.pimentel.series.domain.usecase.GetShows
-import dev.pimentel.series.domain.usecase.SearchSeries
+import dev.pimentel.series.domain.usecase.SearchShows
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -15,11 +15,11 @@ object DomainUseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetSeries(showsRepository: ShowsRepository): GetShows =
-        GetShows(seriesRepository = showsRepository)
+    fun provideGetShows(showsRepository: ShowsRepository): GetShows =
+        GetShows(showsRepository = showsRepository)
 
     @Provides
     @ViewModelScoped
-    fun provideSearchSeries(showsRepository: ShowsRepository): SearchSeries =
-        SearchSeries(seriesRepository = showsRepository)
+    fun provideSearchShows(showsRepository: ShowsRepository): SearchShows =
+        SearchShows(showsRepository = showsRepository)
 }

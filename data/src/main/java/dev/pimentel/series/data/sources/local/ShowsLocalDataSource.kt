@@ -29,5 +29,5 @@ interface ShowsLocalDataSource {
         LIMIT 1
         """
     )
-    suspend fun getLastShowId(): Int
+    suspend fun getLastShowId(): Int?
 }

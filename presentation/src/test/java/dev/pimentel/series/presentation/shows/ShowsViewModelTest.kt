@@ -1,11 +1,11 @@
-package dev.pimentel.series.presentation.series
+package dev.pimentel.series.presentation.shows
 
 import dev.pimentel.series.ViewModelTest
 import dev.pimentel.series.domain.entity.Show
 import dev.pimentel.series.domain.usecase.GetShows
 import dev.pimentel.series.domain.usecase.NoParams
-import dev.pimentel.series.presentation.series.data.SeriesIntention
-import dev.pimentel.series.presentation.series.data.SeriesState
+import dev.pimentel.series.presentation.shows.data.ShowsIntention
+import dev.pimentel.series.presentation.shows.data.ShowsState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -27,10 +27,10 @@ class ShowsViewModelTest : ViewModelTest() {
 
         val viewModel = getViewModelInstance()
 
-        val exampleStateValues = arrayListOf<SeriesState>()
+        val exampleStateValues = arrayListOf<ShowsState>()
         val exampleStateJob = launch { viewModel.state.toList(exampleStateValues) }
 
-        viewModel.publish(SeriesIntention.SearchSeries)
+        viewModel.publish(ShowsIntention.SearchShows)
 
         val firstExampleState = exampleStateValues[0]
         assertEquals(firstExampleState, initialState)
@@ -43,8 +43,8 @@ class ShowsViewModelTest : ViewModelTest() {
         exampleStateJob.cancel()
     }
 
-    private fun getViewModelInstance(): SeriesContract.ViewModel =
-        SeriesViewModel(
+    private fun getViewModelInstance(): ShowsContract.ViewModel =
+        ShowsViewModel(
             dispatchersProvider = dispatchersProvider,
             getExample = getExample,
             initialState = initialState
@@ -55,6 +55,6 @@ class ShowsViewModelTest : ViewModelTest() {
     }
 
     private companion object {
-        val initialState = SeriesState()
+        val initialState = ShowsState()
     }
 }

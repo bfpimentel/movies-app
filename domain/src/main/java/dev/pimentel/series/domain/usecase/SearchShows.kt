@@ -3,9 +3,9 @@ package dev.pimentel.series.domain.usecase
 import dev.pimentel.series.domain.entity.Show
 import dev.pimentel.series.domain.repository.ShowsRepository
 
-class SearchSeries(
+class SearchShows(
     private val showsRepository: ShowsRepository
-) : SuspendedUseCase<SearchSeries.Params, List<Show>> {
+) : SuspendedUseCase<SearchShows.Params, List<Show>> {
 
     override suspend fun invoke(params: Params): List<Show> =
         showsRepository.searchShows(params.query).map { showModel ->

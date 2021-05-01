@@ -52,9 +52,11 @@ dependencies {
     implementation(Libs.Android.materialDesign)
     implementation(Libs.Android.fragment)
     implementation(Libs.Android.startup)
-    implementation(Libs.Android.lifecycleCommon)
+    implementation(Libs.Android.lifecycleRuntime)
 
     implementation(Libs.Kotlin.coroutinesCore)
+
+    implementation(Libs.Coil.core)
 
     implementation(Libs.Navigation.fragment)
     implementation(Libs.Navigation.ui)

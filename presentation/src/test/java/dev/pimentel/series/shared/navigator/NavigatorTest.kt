@@ -3,7 +3,7 @@ package dev.pimentel.series.shared.navigator
 import androidx.navigation.NavController
 import dev.pimentel.series.R
 import dev.pimentel.series.TestDispatchersProvider
-import dev.pimentel.series.presentation.series.ExampleFragmentDirections
+import dev.pimentel.series.presentation.shows.ExampleFragmentDirections
 import dev.pimentel.series.shared.dispatchers.DispatchersProvider
 import io.mockk.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -64,7 +64,7 @@ class NavigatorTest {
     @Test
     fun `should bind navigator and pop with destination`() = testCoroutineDispatcher.runBlockingTest {
         val navController = mockk<NavController>(relaxed = true)
-        val destinationId = R.id.exampleFragment
+        val destinationId = R.id.showsFragment
         val inclusive = true
 
         every { navController.popBackStack(destinationId, inclusive) } returns true

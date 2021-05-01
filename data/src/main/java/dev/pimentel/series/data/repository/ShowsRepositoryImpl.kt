@@ -13,7 +13,7 @@ class ShowsRepositoryImpl(
 ) : ShowsRepository {
 
     override suspend fun getShows(page: Int): List<ShowModel> {
-        if (showsLocalDataSource.getLastShowId() / SHOWS_PER_PAGE <= page) {
+        if (showsLocalDataSource.getLastShowId() ?: DEFAULT_LAST_INDEX / SHOWS_PER_PAGE <= page) {
             val shows = showsRemoteDataSource.getShows(page = page)
             val showsToBeSaved = shows.map { show ->
                 ShowDTO(id = show.id, name = show.name)
@@ -31,6 +31,7 @@ class ShowsRepositoryImpl(
         }
 
     private companion object {
+        const val DEFAULT_LAST_INDEX = 0
         const val SHOWS_PER_PAGE = 250
     }
 }
