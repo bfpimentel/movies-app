@@ -8,11 +8,29 @@
     <fragment
         android:id="@+id/showsFragment"
         android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
-        android:label="WelcomeFragment"
+        android:label="ShowsFragment"
         tools:layout="@layout/shows_fragment">
         <action
             android:id="@+id/toShowsFragment"
             app:destination="@id/showsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/peopleFragment"
+        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:label="PeopleFragment"
+        tools:layout="@layout/shows_fragment" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:label="FavoritesFragment"
+        tools:layout="@layout/shows_fragment" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/shows_fragment" />
 
 </navigation>

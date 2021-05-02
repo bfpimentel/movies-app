@@ -11,7 +11,6 @@ import dev.pimentel.series.shared.dispatchers.DispatchersProvider
 import dev.pimentel.series.shared.mvi.StateViewModelImpl
 import dev.pimentel.series.shared.mvi.toEvent
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class ShowsViewModel @Inject constructor(
@@ -46,7 +45,7 @@ class ShowsViewModel @Inject constructor(
                     name = it.name,
                     premieredDate = "2021-04-22",
                     status = "Ended",
-                    rating = Random(10).nextDouble()
+                    rating = (0..10).random().toDouble() / 2
                 )
             }
 
