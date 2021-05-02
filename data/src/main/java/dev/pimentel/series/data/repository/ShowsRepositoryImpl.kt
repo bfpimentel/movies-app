@@ -6,7 +6,6 @@ import dev.pimentel.series.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.series.data.sources.remote.ShowsRemoteDataSource
 import dev.pimentel.series.domain.model.ShowsPageModel
 import dev.pimentel.series.domain.repository.ShowsRepository
-import dev.pimentel.series.domain.usecase.GetShows
 import kotlinx.coroutines.flow.*
 
 class ShowsRepositoryImpl(
@@ -14,13 +13,13 @@ class ShowsRepositoryImpl(
     private val showsLocalDataSource: ShowsLocalDataSource
 ) : ShowsRepository {
 
-    private val getShowsPublisher = MutableStateFlow<Pair<Int, String?>>(Pair(DEFAULT_PAGE, null))
+    private val getShowsPublisher = MutableSharedFlow<Pair<Int, String?>>()
 
     override fun getShows(): Flow<ShowsPageModel> =
         getShowsPublisher
             .debounce(GET_SHOWS_DEBOUNCE_INTERVAL)
             .mapLatest { (page, query) ->
-                val shows = if (query.isNullOrEmpty()) {
+                val shows = if (query == null) {
                     showsRemoteDataSource.getShows(page = page)
                         .map { show -> ShowModelImpl(id = show.id, name = show.name) }
                 } else {
@@ -31,7 +30,7 @@ class ShowsRepositoryImpl(
                 Triple(page, query, shows)
             }
             .distinctUntilChanged()
-            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
+//            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
             .scan(
                 ShowsPageModelImpl(
                     shows = emptyList(),
@@ -40,8 +39,8 @@ class ShowsRepositoryImpl(
             ) { accumulator, (page, query, shows) ->
                 when {
                     query != null -> ShowsPageModelImpl(shows = shows, nextPage = DEFAULT_PAGE)
-                    page == DEFAULT_PAGE -> ShowsPageModelImpl(shows = shows, nextPage = page + 1)
-                    else -> ShowsPageModelImpl(shows = accumulator.shows + shows, nextPage = page + 1)
+                    page == DEFAULT_PAGE -> ShowsPageModelImpl(shows = shows, nextPage = page + NEXT_PAGE_MODIFIER)
+                    else -> ShowsPageModelImpl(shows = accumulator.shows + shows, nextPage = page + NEXT_PAGE_MODIFIER)
                 }
             }
 
@@ -52,5 +51,6 @@ class ShowsRepositoryImpl(
     private companion object {
         const val GET_SHOWS_DEBOUNCE_INTERVAL = 1000L
         const val DEFAULT_PAGE = 0
+        const val NEXT_PAGE_MODIFIER = 1
     }
 }

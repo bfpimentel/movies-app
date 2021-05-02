@@ -58,10 +58,10 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
                     return false
                 }
             })
-//            searchView.setOnCloseListener {
-//                viewModel.publish(ShowsIntention.GetShows)
-//                false
-//            }
+            searchView.setOnCloseListener {
+                viewModel.publish(ShowsIntention.GetMoreShows)
+                false
+            }
         }
     }
 

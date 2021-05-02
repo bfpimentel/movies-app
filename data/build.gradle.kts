@@ -52,6 +52,7 @@ dependencies {
     implementation(Libs.Hilt.android)
     kapt(Libs.Hilt.compiler)
 
+    testImplementation("app.cash.turbine:turbine:0.4.1")
     testImplementation(Libs.Test.coroutinesCore)
     testImplementation(Libs.Test.mockk)
     testImplementation(Libs.Test.junitAPI)
