@@ -3,7 +3,7 @@ package dev.pimentel.series.shared.navigator
 import androidx.navigation.NavController
 import dev.pimentel.series.R
 import dev.pimentel.series.TestDispatchersProvider
-import dev.pimentel.series.presentation.shows.ExampleFragmentDirections
+import dev.pimentel.series.presentation.shows.ShowsFragmentDirections
 import dev.pimentel.series.shared.dispatchers.DispatchersProvider
 import io.mockk.*
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -25,7 +25,7 @@ class NavigatorTest {
     @Test
     fun `should bind navigator and navigate`() = testCoroutineDispatcher.runBlockingTest {
         val navController = mockk<NavController>(relaxed = true)
-        val directions = ExampleFragmentDirections.toExampleFragment()
+        val directions = ShowsFragmentDirections.toShowsFragment()
 
         justRun { navController.navigate(directions) }
 
@@ -39,7 +39,7 @@ class NavigatorTest {
     @Test
     fun `should unbind navigator and do nothing when trying to navigate`() = testCoroutineDispatcher.runBlockingTest {
         val navController = mockk<NavController>(relaxed = true)
-        val directions = ExampleFragmentDirections.toExampleFragment()
+        val directions = ShowsFragmentDirections.toShowsFragment()
 
         navigator.bind(navController)
         navigator.unbind()

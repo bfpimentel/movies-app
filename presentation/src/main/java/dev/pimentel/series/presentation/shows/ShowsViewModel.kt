@@ -62,7 +62,7 @@ class ShowsViewModel @Inject constructor(
             }
         } catch (error: Exception) {
             Log.d("GET_SHOWS", "ERROR", error)
-            // TODO: Show error
+            // TODO: Map and show errors
         }
     }
 

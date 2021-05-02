@@ -1,12 +1,16 @@
 package dev.pimentel.series.domain.usecase
 
 import dev.pimentel.series.domain.entity.Show
+import dev.pimentel.series.domain.entity.ShowsPage
 import dev.pimentel.series.domain.model.ShowModel
+import dev.pimentel.series.domain.model.ShowsPageModel
 import dev.pimentel.series.domain.repository.ShowsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -18,29 +22,56 @@ class GetShowsTest {
 
     @Test
     fun `should get shows and map them to entities`() = runBlockingTest {
-        val showsModels = listOf(
-            object : ShowModel {
-                override val id: Int = 1
-                override val name: String = "name1"
-            },
-            object : ShowModel {
-                override val id: Int = 2
-                override val name: String = "name2"
+        val showsPageModel =
+            object : ShowsPageModel {
+                override val shows: List<ShowModel> = listOf(
+                    object : ShowModel {
+                        override val id: Int = 1
+                        override val name: String = "name1"
+                        override val status: String = "status1"
+                        override val premieredDate: String = "date1"
+                        override val rating: Float = 1F
+                        override val imageUrl: String = "image1"
+                    },
+                    object : ShowModel {
+                        override val id: Int = 2
+                        override val name: String = "name2"
+                        override val status: String = "status2"
+                        override val premieredDate: String = "date2"
+                        override val rating: Float = 2F
+                        override val imageUrl: String = "image2"
+                    }
+                )
+                override val nextPage: Int = 1
             }
+
+        val showsPage = ShowsPage(
+            shows = listOf(
+                Show(
+                    id = 1,
+                    name = "name1",
+                    status = "status1",
+                    premieredDate = "date1",
+                    rating = 1F,
+                    imageUrl = "image1"
+                ),
+                Show(
+                    id = 2,
+                    name = "name2",
+                    status = "status2",
+                    premieredDate = "date2",
+                    rating = 2F,
+                    imageUrl = "image2"
+                ),
+            ),
+            nextPage = 1
         )
 
-        val shows = listOf(
-            Show(id = 1, name = "name1"),
-            Show(id = 2, name = "name2"),
-        )
+        coEvery { showsRepository.getShows() } returns flowOf(showsPageModel)
 
-        val page = 1
+        assertEquals(useCase(NoParams).first(), showsPage)
 
-        coEvery { showsRepository.getShows(page = page) } returns showsModels
-
-        assertEquals(useCase(GetShows.Params(page)), shows)
-
-        coVerify(exactly = 1) { showsRepository.getShows(page = page) }
+        coVerify(exactly = 1) { showsRepository.getShows() }
         confirmVerified(showsRepository)
     }
 }

@@ -8,6 +8,7 @@ import dev.pimentel.series.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.series.data.sources.remote.ShowsRemoteDataSource
 import dev.pimentel.series.domain.model.ShowsPageModel
 import dev.pimentel.series.domain.repository.ShowsRepository
+import dev.pimentel.series.domain.usecase.GetShows
 import kotlinx.coroutines.flow.*
 
 class ShowsRepositoryImpl(
@@ -27,7 +28,7 @@ class ShowsRepositoryImpl(
                 Triple(page, query, shows.mapAllToModel())
             }
             .distinctUntilChanged()
-//            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
+            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
             .scan(
                 ShowsPageModelImpl(
                     shows = emptyList(),

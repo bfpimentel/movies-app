@@ -46,27 +46,55 @@ class ShowsRepositoryTest {
     @Test
     fun `should get two pages of shows`() = runBlocking {
         val showsFirstPageResponseBody = listOf(
-            ShowResponseBody(id = 0, name = "name1"),
-            ShowResponseBody(id = 1, name = "name2"),
+            ShowResponseBody(
+                id = 0,
+                name = "name0",
+                status = "0",
+                premieredDate = "0",
+                rating = ShowResponseBody.RatingResponseBody(average = 0F),
+                ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+            ),
+            ShowResponseBody(
+                id = 1,
+                name = "name1",
+                status = "1",
+                premieredDate = "1",
+                rating = ShowResponseBody.RatingResponseBody(average = 1F),
+                ShowResponseBody.ImageResponseBody(originalUrl = "1"),
+            ),
         )
         val showsSecondPageResponseBody = listOf(
-            ShowResponseBody(id = 2, name = "name3"),
-            ShowResponseBody(id = 3, name = "name4"),
+            ShowResponseBody(
+                id = 2,
+                name = "name2",
+                status = "2",
+                premieredDate = "2",
+                rating = ShowResponseBody.RatingResponseBody(average = 2F),
+                ShowResponseBody.ImageResponseBody(originalUrl = "2"),
+            ),
+            ShowResponseBody(
+                id = 3,
+                name = "name3",
+                status = "3",
+                premieredDate = "3",
+                rating = ShowResponseBody.RatingResponseBody(average = 3F),
+                ShowResponseBody.ImageResponseBody(originalUrl = "3"),
+            ),
         )
 
         val showsFirstPageModel: ShowsPageModel = ShowsPageModelImpl(
             shows = listOf(
-                ShowModelImpl(id = 0, name = "name1"),
-                ShowModelImpl(id = 1, name = "name2"),
+                ShowModelImpl(id = 0, name = "name0", status = "0", premieredDate = "0", rating = 0F, imageUrl = "0"),
+                ShowModelImpl(id = 1, name = "name1", status = "1", premieredDate = "1", rating = 1F, imageUrl = "1"),
             ),
             nextPage = 1
         )
         val showsSecondPageModel: ShowsPageModel = ShowsPageModelImpl(
             shows = listOf(
-                ShowModelImpl(id = 0, name = "name1"),
-                ShowModelImpl(id = 1, name = "name2"),
-                ShowModelImpl(id = 2, name = "name3"),
-                ShowModelImpl(id = 3, name = "name4"),
+                ShowModelImpl(id = 0, name = "name0", status = "0", premieredDate = "0", rating = 0F, imageUrl = "0"),
+                ShowModelImpl(id = 1, name = "name1", status = "1", premieredDate = "1", rating = 1F, imageUrl = "1"),
+                ShowModelImpl(id = 2, name = "name2", status = "2", premieredDate = "2", rating = 2F, imageUrl = "2"),
+                ShowModelImpl(id = 3, name = "name3", status = "3", premieredDate = "3", rating = 3F, imageUrl = "3"),
             ),
             nextPage = 2
         )
@@ -100,18 +128,54 @@ class ShowsRepositoryTest {
     @Test
     fun `should search for two distinct values`() = runBlocking {
         val showsFirstSearchResponseBody = listOf(
-            ShowSearchResponseBody(ShowResponseBody(id = 0, name = "breaking bad"))
+            ShowSearchResponseBody(
+                ShowResponseBody(
+                    id = 0,
+                    name = "breaking bad",
+                    status = "0",
+                    premieredDate = "0",
+                    rating = ShowResponseBody.RatingResponseBody(average = 0F),
+                    ShowResponseBody.ImageResponseBody(originalUrl = "0")
+                )
+            )
         )
         val showsSecondSearchResponseBody = listOf(
-            ShowSearchResponseBody(ShowResponseBody(id = 1, name = "true detective"))
+            ShowSearchResponseBody(
+                ShowResponseBody(
+                    id = 1,
+                    name = "true detective",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = ShowResponseBody.RatingResponseBody(average = 1F),
+                    ShowResponseBody.ImageResponseBody(originalUrl = "1")
+                )
+            )
         )
 
         val showsFirstPageModel: ShowsPageModel = ShowsPageModelImpl(
-            shows = listOf(ShowModelImpl(id = 0, name = "breaking bad")),
+            shows = listOf(
+                ShowModelImpl(
+                    id = 0,
+                    name = "breaking bad",
+                    status = "0",
+                    premieredDate = "0",
+                    rating = 0F,
+                    imageUrl = "0"
+                )
+            ),
             nextPage = 0
         )
         val showsSecondPageModel: ShowsPageModel = ShowsPageModelImpl(
-            shows = listOf(ShowModelImpl(id = 1, name = "true detective")),
+            shows = listOf(
+                ShowModelImpl(
+                    id = 1,
+                    name = "true detective",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = 1F,
+                    imageUrl = "1"
+                )
+            ),
             nextPage = 0
         )
 
@@ -142,13 +206,31 @@ class ShowsRepositoryTest {
     }
 
     @Test
-    fun `should search for one value only on debounce delay`() = runBlocking {
+    fun `should search only one time while on debounce delay`() = runBlocking {
         val showsFirstSearchResponseBody = listOf(
-            ShowSearchResponseBody(ShowResponseBody(id = 1, name = "true detective"))
+            ShowSearchResponseBody(
+                ShowResponseBody(
+                    id = 1,
+                    name = "true detective",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = ShowResponseBody.RatingResponseBody(average = 1F),
+                    ShowResponseBody.ImageResponseBody(originalUrl = "1")
+                )
+            )
         )
 
         val showsFirstPageModel: ShowsPageModel = ShowsPageModelImpl(
-            shows = listOf(ShowModelImpl(id = 1, name = "true detective")),
+            shows = listOf(
+                ShowModelImpl(
+                    id = 1,
+                    name = "true detective",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = 1F,
+                    imageUrl = "1"
+                )
+            ),
             nextPage = 0
         )
 
