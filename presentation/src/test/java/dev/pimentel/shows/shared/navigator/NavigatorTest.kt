@@ -1,9 +1,9 @@
 package dev.pimentel.shows.shared.navigator
 
 import androidx.navigation.NavController
-import dev.pimentel.series.R
+import dev.pimentel.shows.R
 import dev.pimentel.shows.TestDispatchersProvider
-import dev.pimentel.series.presentation.shows.ShowsFragmentDirections
+import dev.pimentel.shows.presentation.shows.ShowsFragmentDirections
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.navigator.Navigator
 import dev.pimentel.shows.shared.navigator.NavigatorImpl

@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import dev.pimentel.series.R
-import dev.pimentel.series.databinding.ShowsFragmentBinding
+import dev.pimentel.shows.R
+import dev.pimentel.shows.databinding.ShowsFragmentBinding
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.shared.extensions.addEndOfScrollListener
 import dev.pimentel.shows.shared.extensions.watch

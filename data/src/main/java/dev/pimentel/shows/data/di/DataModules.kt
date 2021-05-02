@@ -10,7 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.pimentel.series.data.R
+import dev.pimentel.shows.data.R
 import dev.pimentel.shows.data.database.SeriesDatabase
 import dev.pimentel.shows.data.repository.ShowsRepositoryImpl
 import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource

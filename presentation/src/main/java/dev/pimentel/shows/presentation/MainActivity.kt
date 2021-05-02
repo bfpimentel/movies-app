@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
-import dev.pimentel.series.R
-import dev.pimentel.series.databinding.MainActivityBinding
+import dev.pimentel.shows.R
+import dev.pimentel.shows.databinding.MainActivityBinding
 import dev.pimentel.shows.di.NavigatorBinderQualifier
 import dev.pimentel.shows.shared.navigator.NavigatorBinder
 import javax.inject.Inject

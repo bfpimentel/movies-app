@@ -9,7 +9,7 @@ import coil.load
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dev.pimentel.series.databinding.ShowsItemBinding
+import dev.pimentel.shows.databinding.ShowsItemBinding
 import dev.pimentel.shows.presentation.shows.data.ShowViewData
 
 class ShowsAdapter @AssistedInject constructor(
