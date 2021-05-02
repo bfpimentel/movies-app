@@ -35,7 +35,7 @@ class ShowsAdapter @AssistedInject constructor(
                 name.text = item.name
                 premieredDate.text = item.premieredDate
                 status.text = item.status
-                rating.rating = item.rating.toFloat()
+                rating.rating = item.rating
             }
         }
     }

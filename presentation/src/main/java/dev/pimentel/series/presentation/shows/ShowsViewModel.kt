@@ -48,11 +48,11 @@ class ShowsViewModel @Inject constructor(
                 val showsViewData = showsPage.shows.map {
                     ShowViewData(
                         id = it.id,
-                        imageUrl = "https://static.tvmaze.com/uploads/images/medium_portrait/0/2400.jpg",
+                        imageUrl = it.imageUrl,
                         name = it.name,
-                        premieredDate = "2021-04-22",
-                        status = "Ended",
-                        rating = (0..10).random().toDouble() / 2
+                        premieredDate = it.premieredDate,
+                        status = it.status,
+                        rating = (it.rating ?: 0F) / 2
                     )
                 }
 

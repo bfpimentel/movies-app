@@ -1,5 +1,7 @@
 package dev.pimentel.series.data.repository
 
+import dev.pimentel.series.data.body.ShowResponseBody
+import dev.pimentel.series.data.body.ShowSearchResponseBody
 import dev.pimentel.series.data.model.ShowModelImpl
 import dev.pimentel.series.data.model.ShowsPageModelImpl
 import dev.pimentel.series.data.sources.local.ShowsLocalDataSource
@@ -19,15 +21,10 @@ class ShowsRepositoryImpl(
         getShowsPublisher
             .debounce(GET_SHOWS_DEBOUNCE_INTERVAL)
             .mapLatest { (page, query) ->
-                val shows = if (query == null) {
-                    showsRemoteDataSource.getShows(page = page)
-                        .map { show -> ShowModelImpl(id = show.id, name = show.name) }
-                } else {
-                    showsRemoteDataSource.getShows(query = query)
-                        .map { show -> ShowModelImpl(id = show.info.id, name = show.info.name) }
-                }
+                val shows = if (query == null) showsRemoteDataSource.getShows(page = page)
+                else showsRemoteDataSource.getShows(query = query).map(ShowSearchResponseBody::info)
 
-                Triple(page, query, shows)
+                Triple(page, query, shows.mapAllToModel())
             }
             .distinctUntilChanged()
 //            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
@@ -47,6 +44,17 @@ class ShowsRepositoryImpl(
     override suspend fun getMoreShows(nextPage: Int) = getShowsPublisher.emit(Pair(nextPage, null))
 
     override suspend fun searchShows(query: String) = getShowsPublisher.emit(Pair(DEFAULT_PAGE, query))
+
+    private fun List<ShowResponseBody>.mapAllToModel() = map { show ->
+        ShowModelImpl(
+            id = show.id,
+            name = show.name,
+            status = show.status,
+            premieredDate = show.premieredDate,
+            rating = show.rating.average ?: 0F,
+            imageUrl = show.image.originalUrl
+        )
+    }
 
     private companion object {
         const val GET_SHOWS_DEBOUNCE_INTERVAL = 1000L

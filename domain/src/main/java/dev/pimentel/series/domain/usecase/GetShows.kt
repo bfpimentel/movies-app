@@ -10,7 +10,16 @@ class GetShows(private val showsRepository: ShowsRepository) : UseCase<NoParams,
 
     override fun invoke(params: NoParams): Flow<ShowsPage> = showsRepository.getShows().map { showsPageModel ->
         ShowsPage(
-            shows = showsPageModel.shows.map { showsModel -> Show(id = showsModel.id, name = showsModel.name) },
+            shows = showsPageModel.shows.map { showsModel ->
+                Show(
+                    id = showsModel.id,
+                    name = showsModel.name,
+                    status = showsModel.status,
+                    premieredDate = showsModel.premieredDate,
+                    rating = showsModel.rating,
+                    imageUrl = showsModel.imageUrl
+                )
+            },
             nextPage = showsPageModel.nextPage
         )
     }

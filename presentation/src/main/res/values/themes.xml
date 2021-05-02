@@ -12,4 +12,6 @@
         <item name="actionMenuTextColor">@color/orange</item>
     </style>
 
+    <style name="Theme.RatingBar" parent="Widget.AppCompat.RatingBar.Small" />
+
 </resources>
