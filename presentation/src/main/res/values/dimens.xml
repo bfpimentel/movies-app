@@ -19,4 +19,8 @@
     <dimen name="text_huge">32sp</dimen>
     <!-- Text Defaults -->
 
+    <!-- Shows Fragment -->
+    <dimen name="shows_item_picture_size">120dp</dimen>
+    <!-- Shows Fragment -->
+
 </resources>

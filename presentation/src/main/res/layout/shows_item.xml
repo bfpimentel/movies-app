@@ -7,8 +7,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="@dimen/shows_item_picture_size"
+        android:layout_height="@dimen/shows_item_picture_size"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

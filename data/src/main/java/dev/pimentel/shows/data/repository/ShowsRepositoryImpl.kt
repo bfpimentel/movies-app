@@ -28,7 +28,7 @@ class ShowsRepositoryImpl(
                 Triple(page, query, shows.mapAllToModel())
             }
             .distinctUntilChanged()
-            .catch { ShowsPageModelImpl(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES) }
+            .catch { emit(Triple(GetShows.NO_MORE_PAGES, null, emptyList())) }
             .scan(
                 ShowsPageModelImpl(
                     shows = emptyList(),
@@ -52,7 +52,7 @@ class ShowsRepositoryImpl(
             name = show.name,
             status = show.status,
             premieredDate = show.premieredDate,
-            rating = show.rating.average ?: 0F,
+            rating = show.rating.average,
             imageUrl = show.image.originalUrl
         )
     }

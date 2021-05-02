@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">TV Shows</string>
+
+    <!-- Navigation Menu -->
+    <string name="navigation_shows">Shows</string>
+    <string name="navigation_favorites">Favorites</string>
+    <string name="navigation_settings">Settings</string>
+    <!-- Navigation Menu -->
+
+    <!-- Shows Fragment -->
+    <string name="shows_title">Shows</string>
+    <!-- Shows Fragment -->
+
+    <!-- Favorites Fragment -->
+    <string name="favorites_fragment">Favorites</string>
+    <!-- Shows Fragment -->
+
 </resources>

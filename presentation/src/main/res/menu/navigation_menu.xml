@@ -5,19 +5,19 @@
     <item
         android:id="@+id/showsFragment"
         android:icon="@drawable/ic_shows"
-        android:title="Shows"
+        android:title="@string/navigation_shows"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorites"
-        android:title="Favorites"
+        android:title="@string/navigation_favorites"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Settings"
+        android:title="@string/navigation_settings"
         app:showAsAction="ifRoom" />
 
 </menu>
