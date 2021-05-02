@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/showsFragment"
-        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
         android:label="ShowsFragment"
         tools:layout="@layout/shows_fragment">
         <action
@@ -17,19 +17,19 @@
 
     <fragment
         android:id="@+id/peopleFragment"
-        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
         android:label="PeopleFragment"
         tools:layout="@layout/shows_fragment" />
 
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
         android:label="FavoritesFragment"
         tools:layout="@layout/shows_fragment" />
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="dev.pimentel.series.presentation.shows.ShowsFragment"
+        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/shows_fragment" />
 
