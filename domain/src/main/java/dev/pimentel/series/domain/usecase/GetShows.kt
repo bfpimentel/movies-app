@@ -1,14 +1,21 @@
 package dev.pimentel.series.domain.usecase
 
 import dev.pimentel.series.domain.entity.Show
+import dev.pimentel.series.domain.entity.ShowsPage
 import dev.pimentel.series.domain.repository.ShowsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class GetShows(private val showsRepository: ShowsRepository) : SuspendedUseCase<GetShows.Params, List<Show>> {
+class GetShows(private val showsRepository: ShowsRepository) : UseCase<NoParams, Flow<ShowsPage>> {
 
-    override suspend fun invoke(params: Params): List<Show> =
-        showsRepository.getShows(page = params.page).map { seriesModel ->
-            Show(id = seriesModel.id, name = seriesModel.name)
-        }
+    override fun invoke(params: NoParams): Flow<ShowsPage> = showsRepository.getShows().map { showsPageModel ->
+        ShowsPage(
+            shows = showsPageModel.shows.map { showsModel -> Show(id = showsModel.id, name = showsModel.name) },
+            nextPage = showsPageModel.nextPage
+        )
+    }
 
-    data class Params(val page: Int)
+    companion object {
+        const val NO_MORE_PAGES = -1
+    }
 }

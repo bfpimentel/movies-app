@@ -33,22 +33,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
-        android:text="Premiered: 2008-01-20"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toTopOf="@id/status"
         app:layout_constraintStart_toStartOf="@id/name"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        app:layout_constraintTop_toBottomOf="@id/name"
+        tools:text="Premiered: 2008-01-20" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_small"
-        android:text="Status: Ended"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toTopOf="@id/rating"
         app:layout_constraintStart_toStartOf="@id/name"
-        app:layout_constraintTop_toBottomOf="@id/premieredDate" />
+        app:layout_constraintTop_toBottomOf="@id/premieredDate"
+        tools:text="Status: Ended" />
 
     <androidx.appcompat.widget.AppCompatRatingBar
         android:id="@+id/rating"

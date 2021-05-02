@@ -4,5 +4,5 @@ import com.squareup.moshi.Json
 
 data class ShowSearchResponseBody(
     @Json(name = "score") val score: Double,
-    @Json(name = "show") val show: ShowResponseBody
+    @Json(name = "show") val info: ShowResponseBody
 )

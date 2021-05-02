@@ -2,6 +2,7 @@ package dev.pimentel.series.presentation.shows
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.series.R
 import dev.pimentel.series.databinding.ShowsFragmentBinding
 import dev.pimentel.series.presentation.shows.data.ShowsIntention
+import dev.pimentel.series.shared.extensions.addEndOfScrollListener
 import dev.pimentel.series.shared.extensions.watch
 import dev.pimentel.series.shared.mvi.handleEvent
 import javax.inject.Inject
@@ -27,17 +29,39 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding = ShowsFragmentBinding.bind(view)
 
-        bindAdapter()
+        bindRecyclerView()
+        bindToolbar()
         bindOutputs()
         bindInputs()
     }
 
-    private fun bindAdapter() {
+    private fun bindRecyclerView() {
         this.adapter = this.adapterFactory.create(object : ShowsContract.ItemListener {})
 
         binding.shows.also {
             it.adapter = this.adapter
-            it.layoutManager = LinearLayoutManager(context)
+
+            val layoutManager = LinearLayoutManager(context)
+            it.layoutManager = layoutManager
+            it.addEndOfScrollListener { viewModel.publish(ShowsIntention.GetMoreShows) }
+        }
+    }
+
+    private fun bindToolbar() {
+        binding.toolbar.menu.findItem(R.id.search).actionView.also {
+            val searchView = it as SearchView
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean = false
+
+                override fun onQueryTextChange(query: String?): Boolean {
+                    viewModel.publish(ShowsIntention.SearchShows(query.orEmpty()))
+                    return false
+                }
+            })
+//            searchView.setOnCloseListener {
+//                viewModel.publish(ShowsIntention.GetShows)
+//                false
+//            }
         }
     }
 
@@ -48,6 +72,6 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
     }
 
     private fun bindInputs() {
-        viewModel.publish(ShowsIntention.GetShows)
+        viewModel.publish(ShowsIntention.GetMoreShows)
     }
 }

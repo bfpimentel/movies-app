@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app1="http://schemas.android.com/apk/res-auto"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    xmlns:app3="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/showsFragment"
         android:icon="@drawable/ic_shows"
-        android:title="Shows" />
+        android:title="Shows"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/peopleFragment"
         android:icon="@drawable/ic_people"
-        android:title="People" />
+        android:title="People"
+        app1:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorites"
-        android:title="Favorites" />
+        android:title="Favorites"
+        app2:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:title="Settings"
+        app3:showAsAction="ifRoom" />
 
 </menu>
