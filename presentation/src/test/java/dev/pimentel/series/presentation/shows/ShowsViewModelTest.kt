@@ -133,11 +133,11 @@ class ShowsViewModelTest : ViewModelTest() {
     }
 
     private fun getViewModelInstance(
-        doBefore: () -> Unit = {
-            coEvery { getShows(NoParams) } returns flowOf(ShowsPage(shows = emptyList(), nextPage = 1))
-        }
+        doBefore: (() -> Unit)? = null
     ): ShowsContract.ViewModel {
-        doBefore()
+        doBefore
+            ?.invoke()
+            ?: run { coEvery { getShows(NoParams) } returns flowOf(ShowsPage(shows = emptyList(), nextPage = 1)) }
 
         return ShowsViewModel(
             dispatchersProvider = dispatchersProvider,
