@@ -9,4 +9,5 @@ data class ShowModelImpl(
     override val premieredDate: String,
     override val rating: Float?,
     override val imageUrl: String,
+    override val isFavorite: Boolean
 ) : ShowModel

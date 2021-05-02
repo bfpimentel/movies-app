@@ -6,5 +6,6 @@ data class ShowViewData(
     val name: String,
     val premieredDate: String,
     val status: String,
-    val rating: Float
+    val rating: Float,
+    val isFavorite: Boolean
 )

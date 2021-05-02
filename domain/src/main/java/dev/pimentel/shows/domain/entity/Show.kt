@@ -6,5 +6,6 @@ data class Show(
     val status: String,
     val premieredDate: String,
     val rating: Float?,
-    val imageUrl: String
+    val imageUrl: String,
+    val isFavorite: Boolean
 )

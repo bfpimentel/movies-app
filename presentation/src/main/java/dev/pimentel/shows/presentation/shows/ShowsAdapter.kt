@@ -36,6 +36,9 @@ class ShowsAdapter @AssistedInject constructor(
                 premieredDate.text = item.premieredDate
                 status.text = item.status
                 rating.rating = item.rating
+                favorite.isSelected = item.isFavorite
+
+                favorite.setOnClickListener { listener.favoriteShow(showId = item.id) }
             }
         }
     }

@@ -2,6 +2,7 @@ package dev.pimentel.shows.data.repository
 
 import dev.pimentel.shows.data.body.ShowResponseBody
 import dev.pimentel.shows.data.body.ShowSearchResponseBody
+import dev.pimentel.shows.data.dto.ShowDTO
 import dev.pimentel.shows.data.model.ShowModelImpl
 import dev.pimentel.shows.data.model.ShowsPageModelImpl
 import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource
@@ -19,13 +20,15 @@ class ShowsRepositoryImpl(
     private val getShowsPublisher = MutableSharedFlow<Pair<Int, String?>>()
 
     override fun getShows(): Flow<ShowsPageModel> =
-        getShowsPublisher
-            .debounce(GET_SHOWS_DEBOUNCE_INTERVAL)
-            .mapLatest { (page, query) ->
+        combine(
+            getShowsPublisher.debounce(GET_SHOWS_DEBOUNCE_INTERVAL),
+            showsLocalDataSource.getFavoriteShowsIds()
+        ) { (page, query), favoriteIds -> Triple(page, query, favoriteIds) }
+            .mapLatest { (page, query, favoriteIds) ->
                 val shows = if (query == null) showsRemoteDataSource.getShows(page = page)
                 else showsRemoteDataSource.getShows(query = query).map(ShowSearchResponseBody::info)
 
-                Triple(page, query, shows.mapAllToModel())
+                Triple(page, query, shows.mapAllToModel(favoriteIds))
             }
             .distinctUntilChanged()
             .catch { emit(Triple(GetShows.NO_MORE_PAGES, null, emptyList())) }
@@ -46,14 +49,21 @@ class ShowsRepositoryImpl(
 
     override suspend fun searchShows(query: String) = getShowsPublisher.emit(Pair(DEFAULT_PAGE, query))
 
-    private fun List<ShowResponseBody>.mapAllToModel() = map { show ->
+    override suspend fun favoriteShow(showId: Int) = showsLocalDataSource.saveFavoriteShow(
+        ShowDTO(id = showId, name = "Placeholder") // TODO: Get show details from endpoint and then save it
+    )
+
+    override suspend fun removeShowFromFavorites(showId: Int) = showsLocalDataSource.removeShowFromFavorites(showId)
+
+    private fun List<ShowResponseBody>.mapAllToModel(favoriteIds: List<Int>) = map { show ->
         ShowModelImpl(
             id = show.id,
             name = show.name,
             status = show.status,
             premieredDate = show.premieredDate,
             rating = show.rating.average,
-            imageUrl = show.image.originalUrl
+            imageUrl = show.image.originalUrl,
+            isFavorite = favoriteIds.contains(show.id)
         )
     }
 

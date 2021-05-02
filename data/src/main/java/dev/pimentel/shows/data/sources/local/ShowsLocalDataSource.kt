@@ -4,30 +4,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import dev.pimentel.shows.data.dto.ShowDTO
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShowsLocalDataSource {
 
     @Insert
-    suspend fun saveShows(shows: List<ShowDTO>)
+    suspend fun saveFavoriteShow(show: ShowDTO)
 
-    @Query(
-        """
-        SELECT id, name 
-        FROM Shows
-        WHERE id > (:page * 250)
-        LIMIT 250
-        """
-    )
-    suspend fun getShows(page: Int): List<ShowDTO>
+    @Query("DELETE FROM Shows where id = :showId")
+    suspend fun removeShowFromFavorites(showId: Int)
 
-    @Query(
-        """
-        SELECT id 
-        FROM Shows
-        ORDER BY id DESC
-        LIMIT 1
-        """
-    )
-    suspend fun getLastShowId(): Int?
+    @Query("SELECT id FROM Shows")
+    fun getFavoriteShowsIds(): Flow<List<Int>>
+
+    @Query("SELECT * FROM Shows")
+    suspend fun getFavoriteShows(): List<ShowDTO>
 }

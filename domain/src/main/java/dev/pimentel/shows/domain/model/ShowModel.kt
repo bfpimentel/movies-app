@@ -7,4 +7,5 @@ interface ShowModel {
     val premieredDate: String
     val rating: Float?
     val imageUrl: String
+    val isFavorite: Boolean
 }
