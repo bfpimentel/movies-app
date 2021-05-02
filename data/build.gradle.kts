@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         val apiUrlResName = "api_url"
-        val apiUrl = "http://10.0.2.2:3000/api/"
+        val apiUrl = "http://api.tvmaze.com"
 
         getByName("release") {
             resValue("string", apiUrlResName, apiUrl)
@@ -52,6 +52,7 @@ dependencies {
     implementation(Libs.Hilt.android)
     kapt(Libs.Hilt.compiler)
 
+    testImplementation(Libs.Test.turbine)
     testImplementation(Libs.Test.coroutinesCore)
     testImplementation(Libs.Test.mockk)
     testImplementation(Libs.Test.junitAPI)

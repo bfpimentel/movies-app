@@ -12,8 +12,6 @@ object Libs {
     }
 
     object Kotlin {
-        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-        const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     }
 
@@ -21,12 +19,16 @@ object Libs {
         const val startup = "androidx.startup:startup-runtime:1.0.0"
         const val fragment = "androidx.fragment:fragment-ktx:1.3.0-beta02"
         const val materialDesign = "com.google.android.material:material:1.3.0-alpha04"
-        const val lifecycleCommon = "androidx.lifecycle:lifecycle-common-java8:2.2.0"
+        const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01"
     }
 
     object Navigation {
         const val fragment = "androidx.navigation:navigation-fragment-ktx:$navVersion"
         const val ui = "androidx.navigation:navigation-ui-ktx:$navVersion"
+    }
+
+    object Coil {
+        const val core = "io.coil-kt:coil:1.2.1"
     }
 
     object Networking {
@@ -49,6 +51,7 @@ object Libs {
     }
 
     object Test {
+        const val turbine = "app.cash.turbine:turbine:0.4.1"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
         const val mockk = "io.mockk:mockk:1.11.0"
         const val androidTestCore = "androidx.arch.core:core-testing:2.1.0"

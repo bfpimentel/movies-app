@@ -24,20 +24,24 @@ task createTestReport(type: JacocoReport) {
             '**/BuildConfig.*',
             '**/R.class',
             '**/R$*.class',
+            '**/*Module*.*',
             '**/*Adapter*.*',
             '**/*ViewHolder*.*',
             '**/*Activity*.*',
             '**/*Fragment*.*',
             '**/*Initializer.*',
             '**/*Params.*',
-            '**/EmojiFilter.*',
+            '**/*Application.*',
+            '**/*State.*',
+            '**/*Intention.*',
             '**/DispatchersProvider*.*',
-            '**/presentation/**/data/*.*',
             '**/extensions/*',
     ]
 
     final dataFileExclusions = [
-            '**/*Database**.*'
+            '**/*Database**.*',
+            '**/*RemoteDataSource**.*',
+            '**/*LocalDataSource**.*',
     ]
 
     final classDirectoriesTrees = [
