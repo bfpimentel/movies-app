@@ -1,6 +1,8 @@
 package dev.pimentel.shows.domain.usecase
 
+import dev.pimentel.shows.domain.entity.Episode
 import dev.pimentel.shows.domain.entity.ShowInformation
+import dev.pimentel.shows.domain.model.EpisodeModel
 import dev.pimentel.shows.domain.model.ShowInformationModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import io.mockk.confirmVerified
@@ -33,8 +35,8 @@ class GetShowInformationTest {
                 override val time: String = "0"
                 override val days: List<String> = listOf("0")
             }
-            override val episodes: List<ShowInformationModel.EpisodeModel> = listOf(
-                object : ShowInformationModel.EpisodeModel {
+            override val episodes: List<EpisodeModel> = listOf(
+                object : EpisodeModel {
                     override val id: Int = 0
                     override val number: Int = 0
                     override val season: Int = 0
@@ -58,7 +60,7 @@ class GetShowInformationTest {
             isFavorite = true,
             schedule = ShowInformation.Schedule(time = "0", days = listOf("0")),
             episodes = listOf(
-                ShowInformation.Episode(
+                Episode(
                     id = 0,
                     number = 0,
                     season = 0,

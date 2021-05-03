@@ -2,6 +2,7 @@ package dev.pimentel.shows.presentation.information
 
 import android.content.Context
 import dev.pimentel.shows.R
+import dev.pimentel.shows.domain.entity.Episode
 import dev.pimentel.shows.domain.entity.ShowInformation
 import dev.pimentel.shows.presentation.information.data.InformationViewData
 import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapper
@@ -34,7 +35,7 @@ class InformationViewDataMapperTest {
                 time = "0", days = listOf("0", "1")
             ),
             episodes = listOf(
-                ShowInformation.Episode(
+                Episode(
                     id = 0,
                     number = 0,
                     season = 0,
