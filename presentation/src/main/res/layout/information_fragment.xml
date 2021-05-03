@@ -15,13 +15,12 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/scrollSpace"
@@ -41,15 +40,38 @@
                 android:id="@+id/title"
                 android:layout_width="@dimen/spacing_none"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginStart="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_large"
+                android:layout_marginEnd="@dimen/spacing_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_large"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/favorite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scrollSpace"
                 tools:text="Breaking Bad" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/favorite"
+                android:layout_width="@dimen/spacing_huge"
+                android:layout_height="@dimen/spacing_huge"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_favorites_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
+
+            <androidx.appcompat.widget.AppCompatRatingBar
+                android:id="@+id/rating"
+                style="@style/Theme.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:progressTint="@color/orange"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:rating="4" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/summary"
@@ -57,9 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:textColor="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintTop_toBottomOf="@id/rating"
                 tools:text="@tools:sample/lorem/random[2]" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -69,7 +92,7 @@
                 android:layout_marginHorizontal="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:text="Seasons and Episodes"
-                android:textColor="@color/gray"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +103,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/seasonsLabel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

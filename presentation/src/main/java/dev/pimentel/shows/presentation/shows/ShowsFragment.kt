@@ -2,7 +2,6 @@ package dev.pimentel.shows.presentation.shows
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +10,7 @@ import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.ShowsFragmentBinding
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.shared.extensions.addEndOfScrollListener
+import dev.pimentel.shows.shared.extensions.addSearchListeners
 import dev.pimentel.shows.shared.extensions.watch
 import dev.pimentel.shows.shared.mvi.handleEvent
 import dev.pimentel.shows.shared.shows.ShowsAdapter
@@ -31,7 +31,6 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
         binding = ShowsFragmentBinding.bind(view)
 
         bindRecyclerView()
-        bindToolbar()
         bindOutputs()
         bindInputs()
     }
@@ -49,24 +48,6 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
         }
     }
 
-    private fun bindToolbar() {
-        binding.toolbar.menu.findItem(R.id.search).actionView.also {
-            val searchView = it as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
-
-                override fun onQueryTextChange(query: String?): Boolean {
-                    viewModel.publish(ShowsIntention.SearchShows(query.orEmpty()))
-                    return false
-                }
-            })
-            searchView.setOnCloseListener {
-                viewModel.publish(ShowsIntention.GetMoreShows)
-                false
-            }
-        }
-    }
-
     private fun bindOutputs() {
         watch(viewModel.state) { state ->
             state.showsEvent.handleEvent(adapter::submitList)
@@ -74,6 +55,12 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
     }
 
     private fun bindInputs() {
+        binding.toolbar.addSearchListeners(
+            menuId = R.id.search,
+            onTextChanged = { query -> viewModel.publish(ShowsIntention.SearchShows(query)) },
+            onClose = { viewModel.publish(ShowsIntention.GetMoreShows) }
+        )
+
         viewModel.publish(ShowsIntention.GetMoreShows)
     }
 }

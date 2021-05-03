@@ -70,8 +70,8 @@ class ShowsViewModel @Inject constructor(
         getMoreShows(GetMoreShows.Params(nextPage = this.nextPage))
     }
 
-    private suspend fun searchShows(query: String) {
-        searchShows(SearchShows.Params(query = query))
+    private suspend fun searchShows(query: String?) {
+        searchShows(SearchShows.Params(query = query.orEmpty()))
     }
 
     private suspend fun favoriteOrRemoveShow(showId: Int) {
