@@ -20,14 +20,4 @@ data class ShowInformationModelImpl(
         override val days: List<String>
     ) : ShowInformationModel.ScheduleModel
 
-    data class EpisodeModelImpl(
-        override val id: Int,
-        override val number: Int,
-        override val season: Int,
-        override val name: String,
-        override val summary: String,
-        override val imageUrl: String?,
-        override val airDate: String,
-        override val airTime: String
-    ) : ShowInformationModel.EpisodeModel
 }

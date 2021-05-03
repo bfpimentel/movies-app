@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
+import dev.pimentel.shows.domain.usecase.GetEpisodeInformation
 import dev.pimentel.shows.domain.usecase.GetFavorites
 import dev.pimentel.shows.domain.usecase.GetMoreShows
 import dev.pimentel.shows.domain.usecase.GetShowInformation
@@ -58,4 +59,9 @@ object DomainUseCaseModule {
     @ViewModelScoped
     fun provideSearchShowInformation(showsRepository: ShowsRepository): SearchShowInformation =
         SearchShowInformation(showsRepository = showsRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetEpisodeInformation(showsRepository: ShowsRepository): GetEpisodeInformation =
+        GetEpisodeInformation(showsRepository = showsRepository)
 }

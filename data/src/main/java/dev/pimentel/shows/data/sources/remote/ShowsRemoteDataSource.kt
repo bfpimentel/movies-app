@@ -1,5 +1,6 @@
 package dev.pimentel.shows.data.sources.remote
 
+import dev.pimentel.shows.data.body.EpisodeResponseBody
 import dev.pimentel.shows.data.body.ShowResponseBody
 import dev.pimentel.shows.data.body.ShowSearchResponseBody
 import retrofit2.http.GET
@@ -16,4 +17,11 @@ interface ShowsRemoteDataSource {
 
     @GET("/shows/{showId}?embed=episodes")
     suspend fun getShowInformation(@Path("showId") showId: Int): ShowResponseBody
+
+    @GET("/shows/{showId}/episodebynumber")
+    suspend fun getEpisodeInformation(
+        @Path("showId") showId: Int,
+        @Query("season") seasonNumber: Int,
+        @Query("number") episodeNumber: Int
+    ): EpisodeResponseBody
 }
