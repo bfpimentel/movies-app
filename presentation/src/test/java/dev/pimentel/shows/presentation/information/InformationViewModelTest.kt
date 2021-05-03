@@ -7,10 +7,12 @@ import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
 import dev.pimentel.shows.domain.usecase.GetShowInformation
 import dev.pimentel.shows.domain.usecase.NoParams
 import dev.pimentel.shows.domain.usecase.SearchShowInformation
+import dev.pimentel.shows.presentation.information.data.InformationIntention
 import dev.pimentel.shows.presentation.information.data.InformationState
 import dev.pimentel.shows.presentation.information.data.InformationViewData
 import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapper
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.mockk
@@ -38,6 +40,50 @@ class InformationViewModelTest : ViewModelTest() {
         coVerify(exactly = 1) {
             getShowInformation(NoParams)
             informationViewDataMapper.map(showInformation, emptyList())
+        }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should search show information`() = runBlockingTest {
+        val showId = 0
+
+        val searchShowInformationParams = SearchShowInformation.Params(showId)
+
+        coJustRun { searchShowInformation(searchShowInformationParams) }
+
+        val viewModel = getViewModelInstance()
+
+        viewModel.publish(InformationIntention.SearchShowInformation(showId))
+
+        coVerify(exactly = 1) {
+            getShowInformation(NoParams)
+            informationViewDataMapper.map(showInformation, emptyList())
+            searchShowInformation(searchShowInformationParams)
+        }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should favorite or remove show`() = runBlockingTest {
+        val showId = 0
+
+        val searchShowInformationParams = SearchShowInformation.Params(showId)
+        val favoriteOrRemoveShowParams = FavoriteOrRemoveShow.Params(showId)
+
+        coJustRun { searchShowInformation(searchShowInformationParams) }
+        coJustRun { favoriteOrRemoveShow(favoriteOrRemoveShowParams) }
+
+        val viewModel = getViewModelInstance()
+
+        viewModel.publish(InformationIntention.SearchShowInformation(showId))
+        viewModel.publish(InformationIntention.FavoriteOrRemoveShow)
+
+        coVerify(exactly = 1) {
+            getShowInformation(NoParams)
+            informationViewDataMapper.map(showInformation, emptyList())
+            searchShowInformation(searchShowInformationParams)
+            favoriteOrRemoveShow(favoriteOrRemoveShowParams)
         }
         confirmEverythingVerified()
     }
