@@ -24,7 +24,7 @@ class ShowsViewModel @Inject constructor(
     private val getMoreShows: GetMoreShows,
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
     private val searchShows: SearchShows,
-    private val viewDataMapper: ShowViewDataMapper,
+    private val showViewDataMapper: ShowViewDataMapper,
     dispatchersProvider: DispatchersProvider,
     @ShowsStateQualifier initialState: ShowsState
 ) : StateViewModelImpl<ShowsState, ShowsIntention>(
@@ -49,7 +49,7 @@ class ShowsViewModel @Inject constructor(
     private suspend fun getShows() {
         try {
             getShows(NoParams).collect { showsPage ->
-                val showsViewData = viewDataMapper.mapAll(showsPage.shows)
+                val showsViewData = showViewDataMapper.mapAll(showsPage.shows)
 
                 this.nextPage = showsPage.nextPage
 

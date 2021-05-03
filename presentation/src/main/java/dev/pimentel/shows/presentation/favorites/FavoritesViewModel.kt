@@ -21,7 +21,7 @@ class FavoritesViewModel @Inject constructor(
     private val getFavorites: GetFavorites,
     private val searchFavorites: SearchFavorites,
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
-    private val viewDataMapper: ShowViewDataMapper,
+    private val showViewDataMapper: ShowViewDataMapper,
     dispatchersProvider: DispatchersProvider,
     @FavoritesStateQualifier initialState: FavoritesState
 ) : StateViewModelImpl<FavoritesState, FavoritesIntention>(
@@ -43,7 +43,7 @@ class FavoritesViewModel @Inject constructor(
 
     private suspend fun getFavorites() {
         getFavorites(NoParams).collect { shows ->
-            val showsViewData = viewDataMapper.mapAll(shows)
+            val showsViewData = showViewDataMapper.mapAll(shows)
 
             updateState { copy(showsEvent = showsViewData.toEvent()) }
         }
