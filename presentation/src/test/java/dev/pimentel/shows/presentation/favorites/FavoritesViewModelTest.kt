@@ -98,11 +98,11 @@ class FavoritesViewModelTest : ViewModelTest() {
     fun `should search shows`() = runBlockingTest {
         val query = "query"
 
-        val viewModel = getViewModelInstance()
-
         val searchFavoritesParams = SearchFavorites.Params(query)
 
         coJustRun { searchFavorites(searchFavoritesParams) }
+
+        val viewModel = getViewModelInstance()
 
         viewModel.publish(FavoritesIntention.SearchFavorites(query))
 
@@ -118,11 +118,11 @@ class FavoritesViewModelTest : ViewModelTest() {
     fun `should favorite or remove show`() = runBlockingTest {
         val showId = 1
 
-        val viewModel = getViewModelInstance()
-
         val favoriteOrRemoveShowParams = FavoriteOrRemoveShow.Params(showId)
 
         coJustRun { favoriteOrRemoveShow(favoriteOrRemoveShowParams) }
+
+        val viewModel = getViewModelInstance()
 
         viewModel.publish(FavoritesIntention.FavoriteOrRemoveShow(showId))
 
@@ -130,6 +130,26 @@ class FavoritesViewModelTest : ViewModelTest() {
             getFavorites(NoParams)
             favoriteOrRemoveShow(favoriteOrRemoveShowParams)
             showViewDataMapper.mapAll(emptyList())
+        }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should navigate to information`() = runBlockingTest {
+        val showId = 1
+
+        val directions = FavoritesFragmentDirections.toInformationFragment(showId)
+
+        coJustRun { navigator.navigate(directions) }
+
+        val viewModel = getViewModelInstance()
+
+        viewModel.publish(FavoritesIntention.NavigateToInformation(showId))
+
+        coVerify(exactly = 1) {
+            getFavorites(NoParams)
+            showViewDataMapper.mapAll(emptyList())
+            navigator.navigate(directions)
         }
         confirmEverythingVerified()
     }

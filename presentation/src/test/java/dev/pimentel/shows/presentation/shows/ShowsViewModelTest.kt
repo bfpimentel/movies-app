@@ -8,6 +8,8 @@ import dev.pimentel.shows.domain.usecase.GetMoreShows
 import dev.pimentel.shows.domain.usecase.GetShows
 import dev.pimentel.shows.domain.usecase.NoParams
 import dev.pimentel.shows.domain.usecase.SearchShows
+import dev.pimentel.shows.presentation.favorites.FavoritesFragmentDirections
+import dev.pimentel.shows.presentation.favorites.data.FavoritesIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
 import dev.pimentel.shows.shared.navigator.NavigatorRouter
@@ -102,11 +104,11 @@ class ShowsViewModelTest : ViewModelTest() {
 
     @Test
     fun `should get more shows`() = runBlockingTest {
-        val viewModel = getViewModelInstance()
-
         val getMoreShowsParams = GetMoreShows.Params(1)
 
         coJustRun { getMoreShows(getMoreShowsParams) }
+
+        val viewModel = getViewModelInstance()
 
         viewModel.publish(ShowsIntention.GetMoreShows)
 
@@ -140,11 +142,11 @@ class ShowsViewModelTest : ViewModelTest() {
     fun `should search shows`() = runBlockingTest {
         val query = "query"
 
-        val viewModel = getViewModelInstance()
-
         val searchShowsParams = SearchShows.Params(query)
 
         coJustRun { searchShows(searchShowsParams) }
+
+        val viewModel = getViewModelInstance()
 
         viewModel.publish(ShowsIntention.SearchShows(query))
 
@@ -160,11 +162,11 @@ class ShowsViewModelTest : ViewModelTest() {
     fun `should favorite or remove show`() = runBlockingTest {
         val showId = 1
 
-        val viewModel = getViewModelInstance()
-
         val favoriteOrRemoveShowParams = FavoriteOrRemoveShow.Params(showId)
 
         coJustRun { favoriteOrRemoveShow(favoriteOrRemoveShowParams) }
+
+        val viewModel = getViewModelInstance()
 
         viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
 
@@ -172,6 +174,26 @@ class ShowsViewModelTest : ViewModelTest() {
             getShows(NoParams)
             favoriteOrRemoveShow(favoriteOrRemoveShowParams)
             showViewDataMapper.mapAll(emptyList())
+        }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should navigate to information`() = runBlockingTest {
+        val showId = 1
+
+        val directions = ShowsFragmentDirections.toInformationFragment(showId)
+
+        coJustRun { navigator.navigate(directions) }
+
+        val viewModel = getViewModelInstance()
+
+        viewModel.publish(ShowsIntention.NavigateToInformation(showId))
+
+        coVerify(exactly = 1) {
+            getShows(NoParams)
+            showViewDataMapper.mapAll(emptyList())
+            navigator.navigate(directions)
         }
         confirmEverythingVerified()
     }
