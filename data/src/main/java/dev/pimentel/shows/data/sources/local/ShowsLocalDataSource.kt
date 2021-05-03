@@ -9,18 +9,40 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShowsLocalDataSource {
 
+    @Query(
+        """
+        SELECT * 
+        FROM Shows 
+        WHERE name LIKE '%' || :query || '%'
+        """
+    )
+    fun getFavoriteShows(query: String): Flow<List<ShowDTO>>
+
+    @Query(
+        """
+        SELECT id 
+        FROM Shows
+        """
+    )
+    fun getFavoriteShowsIds(): Flow<List<Int>>
+
     @Insert
     suspend fun saveFavoriteShow(show: ShowDTO)
 
-    @Query("DELETE FROM Shows where id = :showId")
+    @Query(
+        """
+        DELETE FROM Shows 
+        WHERE id = :showId
+        """
+    )
     suspend fun removeShowFromFavorites(showId: Int)
 
-    @Query("SELECT id FROM Shows")
-    fun getFavoriteShowsIds(): Flow<List<Int>>
-
-    @Query("SELECT * FROM Shows")
-    suspend fun getFavoriteShows(): List<ShowDTO>
-
-    @Query("SELECT * FROM Shows where id == :showId")
+    @Query(
+        """
+        SELECT * 
+        FROM Shows 
+        WHERE id == :showId
+        """
+    )
     suspend fun getFavoriteById(showId: Int): ShowDTO?
 }

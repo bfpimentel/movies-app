@@ -44,12 +44,13 @@ class ShowsViewModel @Inject constructor(
     private suspend fun getShows() {
         try {
             getShows(NoParams).collect { showsPage ->
+                // TODO: Need to abstract mapping to a separate class
                 val showsViewData = showsPage.shows.map { show ->
                     ShowViewData(
                         id = show.id,
                         imageUrl = show.imageUrl,
                         name = show.name,
-                        premieredDate = show.premieredDate,
+                        premieredDate = show.premieredDate ?: "Unknown",
                         status = show.status,
                         rating = (show.rating ?: DEFAULT_RATING) / FIVE_STAR_RATING_DIVIDER,
                         isFavorite = show.isFavorite

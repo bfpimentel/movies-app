@@ -7,6 +7,7 @@ import dev.pimentel.shows.data.model.ShowModelImpl
 import dev.pimentel.shows.data.model.ShowsPageModelImpl
 import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.shows.data.sources.remote.ShowsRemoteDataSource
+import dev.pimentel.shows.domain.model.ShowModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.GetShows
@@ -19,6 +20,7 @@ class ShowsRepositoryImpl(
 ) : ShowsRepository {
 
     private val getShowsPublisher = MutableSharedFlow<Pair<Int, String?>>()
+    private val favoriteSearchPublisher = MutableSharedFlow<String>()
 
     override fun getShows(): Flow<ShowsPageModel> =
         getShowsPublisher
@@ -26,7 +28,6 @@ class ShowsRepositoryImpl(
             .mapLatest { (page, query) ->
                 val shows = if (query == null) showsRemoteDataSource.getShows(page = page)
                 else showsRemoteDataSource.getShows(query = query).map(ShowSearchResponseBody::info)
-
                 Triple(page, query, shows)
             }
             .distinctUntilChanged()
@@ -41,9 +42,14 @@ class ShowsRepositoryImpl(
                     page == DEFAULT_PAGE -> Pair(shows, page + NEXT_PAGE_MODIFIER)
                     else -> Pair(lastShows + shows, page + NEXT_PAGE_MODIFIER)
                 }
-            }.combine(showsLocalDataSource.getFavoriteShowsIds()) { (shows, nextPage), favoriteIds ->
+            }
+            .combine(showsLocalDataSource.getFavoriteShowsIds()) { (shows, nextPage), favoriteIds ->
                 ShowsPageModelImpl(shows = shows.mapAllToModel(favoriteIds), nextPage = nextPage)
             }
+
+    override fun getFavoriteShows(): Flow<List<ShowModel>> = favoriteSearchPublisher.flatMapLatest { query ->
+        showsLocalDataSource.getFavoriteShows(query).map { shows -> shows.mapAllToModel() }
+    }
 
     override suspend fun getMoreShows(nextPage: Int) = getShowsPublisher.emit(Pair(nextPage, null))
 
@@ -51,30 +57,47 @@ class ShowsRepositoryImpl(
 
     override suspend fun favoriteOrRemoveShow(showId: Int) {
         if (showsLocalDataSource.getFavoriteById(showId) == null) {
-            showsLocalDataSource.saveFavoriteShow(
-                ShowDTO(id = showId, name = "Placeholder") // TODO: Get show details from endpoint and then save it
-            )
+            val newFavoriteShow = showsRemoteDataSource.getShowInformation(showId).mapToDTO()
+            showsLocalDataSource.saveFavoriteShow(newFavoriteShow)
         } else {
             showsLocalDataSource.removeShowFromFavorites(showId)
         }
     }
+
+    override suspend fun getShowInformation(showId: Int): ShowModel = TODO()
 
     private fun List<ShowResponseBody>.mapAllToModel(favoriteIds: List<Int>) = map { show ->
         ShowModelImpl(
             id = show.id,
             name = show.name,
             status = show.status,
-            premieredDate = show.premieredDate ?: "unknown",
+            premieredDate = show.premieredDate,
             rating = show.rating.average,
-            imageUrl = show.image?.originalUrl.orEmpty(),
+            imageUrl = show.image?.originalUrl,
             isFavorite = favoriteIds.contains(show.id)
         )
     }
 
-    private fun ShowResponseBody.mapToDTO(): ShowDTO = let { body ->
+    private fun List<ShowDTO>.mapAllToModel(): List<ShowModel> = map { show ->
+        ShowModelImpl(
+            id = show.id,
+            name = show.name,
+            status = show.status,
+            premieredDate = show.premieredDate,
+            rating = show.rating,
+            imageUrl = show.imageUrl,
+            isFavorite = true
+        )
+    }
+
+    private fun ShowResponseBody.mapToDTO(): ShowDTO = let { show ->
         ShowDTO(
-            id = body.id,
-            name = body.name,
+            id = show.id,
+            name = show.name,
+            status = show.status,
+            premieredDate = show.premieredDate,
+            rating = show.rating.average,
+            imageUrl = show.image?.originalUrl
         )
     }
 
