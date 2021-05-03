@@ -32,4 +32,9 @@
     <string name="information_episodes_title">#%d - %s</string>
     <!-- Information Fragment -->
 
+    <!-- Episode Fragment -->
+    <string name="episode_numbers">Season %d - Episode %d</string>
+    <string name="episode_aired_at">Aired at %s at %s</string>
+    <!-- Episode Fragment -->
+
 </resources>

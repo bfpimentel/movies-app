@@ -2,9 +2,12 @@ package dev.pimentel.shows.presentation.episode
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.text.parseAsHtml
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.EpisodeFragmentBinding
@@ -27,7 +30,17 @@ class EpisodeFragment : Fragment(R.layout.episode_fragment) {
 
     private fun bindOutputs() {
         watch(viewModel.state) { state ->
+            with(binding) {
+                state.imageUrl?.also { imageUrl ->
+                    image.isVisible = true
+                    image.load(imageUrl)
+                } ?: run { image.isVisible = false }
 
+                name.text = state.name
+                numbers.text = getString(R.string.episode_numbers, state.season, state.number)
+                dates.text = getString(R.string.episode_aired_at, state.airDate, state.airTime)
+                summary.text = state.summary.parseAsHtml()
+            }
         }
     }
 

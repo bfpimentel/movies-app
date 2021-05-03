@@ -28,4 +28,8 @@
     <dimen name="information_scroll_space_height">348dp</dimen>
     <!-- Information Fragment -->
 
+    <!-- Episode Fragment -->
+    <dimen name="episode_picture_height">240dp</dimen>
+    <!-- Episode Fragment -->
+
 </resources>

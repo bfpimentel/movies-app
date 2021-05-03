@@ -40,7 +40,8 @@ class InformationFragment : Fragment(R.layout.information_fragment) {
             override fun onSeasonClick(seasonNumber: Int) =
                 viewModel.publish(InformationIntention.OpenOrCloseSeason(seasonNumber))
 
-            override fun onEpisodeClick(episodeId: Int) = Unit
+            override fun onEpisodeClick(seasonNumber: Int, episodeNumber: Int) =
+                viewModel.publish(InformationIntention.OpenEpisode(seasonNumber, episodeNumber))
         })
 
         binding.seasons.also {

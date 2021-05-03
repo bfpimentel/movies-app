@@ -25,7 +25,7 @@ class InformationSeasonsAdapter @AssistedInject constructor(
 
     interface ItemListener {
         fun onSeasonClick(seasonNumber: Int)
-        fun onEpisodeClick(episodeId: Int)
+        fun onEpisodeClick(seasonNumber: Int, episodeNumber: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
@@ -44,10 +44,10 @@ class InformationSeasonsAdapter @AssistedInject constructor(
                 seasonName.setOnClickListener { listener.onSeasonClick(item.number) }
             }
 
-            bindEpisodes(item.episodes)
+            bindEpisodes(seasonNumber = item.number, episodes = item.episodes)
         }
 
-        private fun bindEpisodes(episodes: List<SeasonViewData.EpisodeViewData>) {
+        private fun bindEpisodes(seasonNumber: Int, episodes: List<SeasonViewData.EpisodeViewData>) {
             binding.episodes.removeAllViews()
             episodes.map { episode ->
                 val episodeBinding = InformationEpisodeItemBinding.inflate(
@@ -61,7 +61,9 @@ class InformationSeasonsAdapter @AssistedInject constructor(
                         episode.number,
                         episode.name
                     )
-                    episodeName.setOnClickListener { listener.onEpisodeClick(episode.id) }
+                    episodeName.setOnClickListener {
+                        listener.onEpisodeClick(seasonNumber = seasonNumber, episodeNumber = episode.number)
+                    }
                 }
                 episodeBinding.root
             }.forEach(binding.episodes::addView)

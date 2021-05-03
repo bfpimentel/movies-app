@@ -1,13 +1,16 @@
 package dev.pimentel.shows.presentation.episode
 
 import android.util.Log
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pimentel.shows.domain.usecase.GetEpisodeInformation
 import dev.pimentel.shows.presentation.episode.data.EpisodeIntention
 import dev.pimentel.shows.presentation.episode.data.EpisodeState
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.mvi.StateViewModelImpl
+import javax.inject.Inject
 
-class EpisodeViewModel(
+@HiltViewModel
+class EpisodeViewModel @Inject constructor(
     private val getEpisodeInformation: GetEpisodeInformation,
     dispatchersProvider: DispatchersProvider,
     @EpisodeStateQualifier initialState: EpisodeState
