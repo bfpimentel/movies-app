@@ -1,6 +1,7 @@
 package dev.pimentel.shows.shared.shows
 
 import android.content.Context
+import dev.pimentel.shows.R
 import dev.pimentel.shows.domain.entity.Show
 
 interface ShowViewDataMapper {
@@ -14,7 +15,7 @@ class ShowViewDataMapperImpl(private val context: Context) : ShowViewDataMapper 
             id = show.id,
             imageUrl = show.imageUrl,
             name = show.name,
-            premieredDate = show.premieredDate ?: "Unknown", // TODO: Get string from resources
+            premieredDate = show.premieredDate ?: context.getString(R.string.shows_item_unknown_premier_date),
             status = show.status,
             rating = (show.rating ?: DEFAULT_RATING) / FIVE_STAR_RATING_DIVIDER,
             isFavorite = show.isFavorite
