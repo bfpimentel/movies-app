@@ -16,7 +16,9 @@ class InformationViewDataMapperImpl(
     override suspend fun map(showInformation: ShowInformation, openSeasons: List<Int>): InformationViewData =
         InformationViewData(
             name = showInformation.name,
-            summary = showInformation.summary,
+            summary = showInformation.summary
+                .replace(PARAGRAPH_OPENING, EMPTY_STRING)
+                .replace(PARAGRAPH_CLOSING, EMPTY_STRING),
             status = showInformation.status,
             premieredDate = showInformation.premieredDate
                 ?: context.getString(R.string.information_unknown_premier_date),
@@ -47,5 +49,8 @@ class InformationViewDataMapperImpl(
         const val DEFAULT_RATING = 0F
         const val FIVE_STAR_RATING_DIVIDER = 2
         const val SCHEDULE_SEPARATOR = ",\n"
+        const val PARAGRAPH_OPENING = "<p>"
+        const val PARAGRAPH_CLOSING = "</p>"
+        const val EMPTY_STRING = ""
     }
 }

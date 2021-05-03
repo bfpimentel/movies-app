@@ -82,7 +82,7 @@ class ShowsRepositoryImpl(
 
     override fun getShowInformation(): Flow<ShowInformationModel> =
         getShowInformationPublisher
-            .mapLatest { showId -> showsRemoteDataSource.getShowInformation(showId) }
+            .mapLatest(showsRemoteDataSource::getShowInformation)
             .combine(showsLocalDataSource.getFavoriteShowsIds()) { response, favoriteIds ->
                 response.mapToInfoModel(favoriteIds)
             }

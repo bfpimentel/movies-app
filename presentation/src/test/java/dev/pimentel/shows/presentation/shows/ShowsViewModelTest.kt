@@ -10,13 +10,13 @@ import dev.pimentel.shows.domain.usecase.NoParams
 import dev.pimentel.shows.domain.usecase.SearchShows
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
+import dev.pimentel.shows.shared.navigator.NavigatorRouter
 import dev.pimentel.shows.shared.shows.ShowViewData
 import dev.pimentel.shows.shared.shows.ShowViewDataMapper
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test
 
 class ShowsViewModelTest : ViewModelTest() {
 
+    private val navigator = mockk<NavigatorRouter>()
     private val favoriteOrRemoveShow = mockk<FavoriteOrRemoveShow>()
     private val getShows = mockk<GetShows>()
     private val getMoreShows = mockk<GetMoreShows>()
@@ -81,7 +82,7 @@ class ShowsViewModelTest : ViewModelTest() {
 
         val viewModel = getViewModelInstance {
             coEvery { getShows(NoParams) } returns flowOf(showsPage)
-            every { showViewDataMapper.mapAll(showsPage.shows) } returns showsViewData
+            coEvery { showViewDataMapper.mapAll(showsPage.shows) } returns showsViewData
         }
 
         val showsStateValues = arrayListOf<ShowsState>()
@@ -123,7 +124,7 @@ class ShowsViewModelTest : ViewModelTest() {
 
         val viewModel = getViewModelInstance {
             coEvery { getShows(NoParams) } returns flowOf(showsPage)
-            every { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
+            coEvery { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
         }
 
         viewModel.publish(ShowsIntention.GetMoreShows)
@@ -180,22 +181,24 @@ class ShowsViewModelTest : ViewModelTest() {
             ?.invoke()
             ?: run {
                 coEvery { getShows(NoParams) } returns flowOf(ShowsPage(shows = emptyList(), nextPage = 1))
-                every { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
+                coEvery { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
             }
 
         return ShowsViewModel(
-            dispatchersProvider = dispatchersProvider,
+            navigator = navigator,
             getShows = getShows,
             getMoreShows = getMoreShows,
             searchShows = searchShows,
             favoriteOrRemoveShow = favoriteOrRemoveShow,
             showViewDataMapper = showViewDataMapper,
+            dispatchersProvider = dispatchersProvider,
             initialState = initialState
         )
     }
 
     private fun confirmEverythingVerified() {
         confirmVerified(
+            navigator,
             getShows,
             getMoreShows,
             searchShows,

@@ -50,12 +50,13 @@ class InformationViewModel @Inject constructor(
 
     private suspend fun getShowInformation() {
         try {
+            val openOrCloseSeasonFlow = openOrCloseSeasonPublisher.scan(emptyList<Int>()) { accumulator, value ->
+                accumulator.toMutableList().apply { if (contains(value)) remove(value) else add(value) }
+            }
+
             getShowInformation(NoParams)
-                .combine(openOrCloseSeasonPublisher.scan(emptyList()) { accumulator, value ->
-                    accumulator.toMutableList().apply { if (contains(value)) remove(value) else add(value) }
-                }, informationViewDataMapper::map).collect { viewData ->
-                    updateState { copy(informationEvent = viewData.toEvent()) }
-                }
+                .combine(openOrCloseSeasonFlow, informationViewDataMapper::map)
+                .collect { viewData -> updateState { copy(informationEvent = viewData.toEvent()) } }
         } catch (error: Exception) {
             Log.d("GET_SHOW_INFORMATION", "ERROR", error)
         }

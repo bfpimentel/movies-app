@@ -5,9 +5,11 @@ import dev.pimentel.shows.R
 import dev.pimentel.shows.TestDispatchersProvider
 import dev.pimentel.shows.presentation.shows.ShowsFragmentDirections
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
-import dev.pimentel.shows.shared.navigator.Navigator
-import dev.pimentel.shows.shared.navigator.NavigatorImpl
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +29,7 @@ class NavigatorTest {
     @Test
     fun `should bind navigator and navigate`() = testCoroutineDispatcher.runBlockingTest {
         val navController = mockk<NavController>(relaxed = true)
-        val directions = ShowsFragmentDirections.toShowsFragment()
+        val directions = ShowsFragmentDirections.toInformationFragment(0)
 
         justRun { navController.navigate(directions) }
 
@@ -41,7 +43,7 @@ class NavigatorTest {
     @Test
     fun `should unbind navigator and do nothing when trying to navigate`() = testCoroutineDispatcher.runBlockingTest {
         val navController = mockk<NavController>(relaxed = true)
-        val directions = ShowsFragmentDirections.toShowsFragment()
+        val directions = ShowsFragmentDirections.toInformationFragment(0)
 
         navigator.bind(navController)
         navigator.unbind()
