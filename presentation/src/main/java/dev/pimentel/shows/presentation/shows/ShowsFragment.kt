@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.ShowsFragmentBinding
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
+import dev.pimentel.shows.shared.shows_adapter.ShowsAdapter
 import dev.pimentel.shows.shared.extensions.addEndOfScrollListener
 import dev.pimentel.shows.shared.extensions.watch
 import dev.pimentel.shows.shared.mvi.handleEvent
@@ -36,7 +37,7 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
     }
 
     private fun bindRecyclerView() {
-        this.adapter = this.adapterFactory.create(object : ShowsContract.ItemListener {
+        this.adapter = this.adapterFactory.create(object : ShowsAdapter.ItemListener {
             override fun favoriteShow(showId: Int) = viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
         })
 

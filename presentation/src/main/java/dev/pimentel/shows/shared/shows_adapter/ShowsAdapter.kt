@@ -1,4 +1,4 @@
-package dev.pimentel.shows.presentation.shows
+package dev.pimentel.shows.shared.shows_adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,15 +10,18 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dev.pimentel.shows.databinding.ShowsItemBinding
-import dev.pimentel.shows.presentation.shows.data.ShowViewData
 
 class ShowsAdapter @AssistedInject constructor(
-    @Assisted private val listener: ShowsContract.ItemListener
+    @Assisted private val listener: ItemListener
 ) : ListAdapter<ShowViewData, ShowsAdapter.ViewHolder>(Diff) {
 
     @AssistedFactory
     interface Factory {
-        fun create(listener: ShowsContract.ItemListener): ShowsAdapter
+        fun create(listener: ItemListener): ShowsAdapter
+    }
+
+    interface ItemListener {
+        fun favoriteShow(showId: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(

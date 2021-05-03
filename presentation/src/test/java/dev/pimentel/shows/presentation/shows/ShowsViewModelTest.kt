@@ -4,7 +4,7 @@ import dev.pimentel.shows.ViewModelTest
 import dev.pimentel.shows.domain.entity.Show
 import dev.pimentel.shows.domain.entity.ShowsPage
 import dev.pimentel.shows.domain.usecase.*
-import dev.pimentel.shows.presentation.shows.data.ShowViewData
+import dev.pimentel.shows.shared.shows_adapter.ShowViewData
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
 import io.mockk.*

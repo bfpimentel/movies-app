@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pimentel.shows.domain.usecase.*
-import dev.pimentel.shows.presentation.shows.data.ShowViewData
+import dev.pimentel.shows.shared.shows_adapter.ShowViewData
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
@@ -21,7 +21,7 @@ class ShowsViewModel @Inject constructor(
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
     private val searchShows: SearchShows,
     dispatchersProvider: DispatchersProvider,
-    @WelcomeStateQualifier initialState: ShowsState
+    @ShowsStateQualifier initialState: ShowsState
 ) : StateViewModelImpl<ShowsState, ShowsIntention>(
     dispatchersProvider = dispatchersProvider,
     initialState = initialState
