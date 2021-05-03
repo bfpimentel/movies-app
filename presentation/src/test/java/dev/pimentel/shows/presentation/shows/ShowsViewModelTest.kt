@@ -3,11 +3,20 @@ package dev.pimentel.shows.presentation.shows
 import dev.pimentel.shows.ViewModelTest
 import dev.pimentel.shows.domain.entity.Show
 import dev.pimentel.shows.domain.entity.ShowsPage
-import dev.pimentel.shows.domain.usecase.*
-import dev.pimentel.shows.shared.shows_adapter.ShowViewData
+import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
+import dev.pimentel.shows.domain.usecase.GetMoreShows
+import dev.pimentel.shows.domain.usecase.GetShows
+import dev.pimentel.shows.domain.usecase.NoParams
+import dev.pimentel.shows.domain.usecase.SearchShows
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
-import io.mockk.*
+import dev.pimentel.shows.shared.shows.ShowViewData
+import dev.pimentel.shows.shared.shows.ShowViewDataMapper
+import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -20,6 +29,7 @@ class ShowsViewModelTest : ViewModelTest() {
     private val getShows = mockk<GetShows>()
     private val getMoreShows = mockk<GetMoreShows>()
     private val searchShows = mockk<SearchShows>()
+    private val viewDataMapper = mockk<ShowViewDataMapper>()
 
     @Test
     fun `should get shows`() = runBlockingTest {
@@ -166,6 +176,7 @@ class ShowsViewModelTest : ViewModelTest() {
             getMoreShows = getMoreShows,
             searchShows = searchShows,
             favoriteOrRemoveShow = favoriteOrRemoveShow,
+            viewDataMapper = viewDataMapper,
             initialState = initialState
         )
     }
@@ -175,7 +186,8 @@ class ShowsViewModelTest : ViewModelTest() {
             getShows,
             getMoreShows,
             searchShows,
-            favoriteOrRemoveShow
+            favoriteOrRemoveShow,
+            viewDataMapper
         )
     }
 

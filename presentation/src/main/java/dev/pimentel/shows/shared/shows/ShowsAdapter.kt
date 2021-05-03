@@ -1,4 +1,4 @@
-package dev.pimentel.shows.shared.shows_adapter
+package dev.pimentel.shows.shared.shows
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

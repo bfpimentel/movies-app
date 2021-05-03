@@ -3,18 +3,25 @@ package dev.pimentel.shows.presentation.favorites
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
+import dev.pimentel.shows.domain.usecase.GetFavorites
+import dev.pimentel.shows.domain.usecase.NoParams
+import dev.pimentel.shows.domain.usecase.SearchFavorites
 import dev.pimentel.shows.presentation.favorites.data.FavoritesIntention
 import dev.pimentel.shows.presentation.favorites.data.FavoritesState
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.mvi.StateViewModelImpl
+import dev.pimentel.shows.shared.mvi.toEvent
+import dev.pimentel.shows.shared.shows.ShowViewDataMapper
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
-//    private val getFavorites: GetFavorites,
-//    private val searchFavorites: SearchFavorites,
+    private val getFavorites: GetFavorites,
+    private val searchFavorites: SearchFavorites,
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
+    private val viewDataMapper: ShowViewDataMapper,
     dispatchersProvider: DispatchersProvider,
     @FavoritesStateQualifier initialState: FavoritesState
 ) : StateViewModelImpl<FavoritesState, FavoritesIntention>(
@@ -23,17 +30,22 @@ class FavoritesViewModel @Inject constructor(
 ), FavoritesContract.ViewModel {
 
     init {
-        viewModelScope.launch(dispatchersProvider.io) { }
+        viewModelScope.launch(dispatchersProvider.io) { getFavorites() }
     }
 
     override suspend fun handleIntentions(intention: FavoritesIntention) {
         when (intention) {
-            is FavoritesIntention.FavoriteOrRemoveShow -> TODO()
-            is FavoritesIntention.SearchFavorites -> getFavorites()
+            is FavoritesIntention.SearchFavorites -> searchFavorites(SearchFavorites.Params(intention.query.orEmpty()))
+            is FavoritesIntention.FavoriteOrRemoveShow ->
+                favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(intention.showId))
         }
     }
 
     private suspend fun getFavorites() {
+        getFavorites(NoParams).collect { shows ->
+            val showsViewData = viewDataMapper.mapAll(shows)
 
+            updateState { copy(showsEvent = showsViewData.toEvent()) }
+        }
     }
 }

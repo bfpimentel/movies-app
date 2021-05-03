@@ -16,16 +16,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/peopleFragment"
-        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
-        android:label="PeopleFragment"
-        tools:layout="@layout/shows_fragment" />
-
-    <fragment
         android:id="@+id/favoritesFragment"
-        android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
+        android:name="dev.pimentel.shows.presentation.favorites.FavoritesFragment"
         android:label="FavoritesFragment"
-        tools:layout="@layout/shows_fragment" />
+        tools:layout="@layout/favorites_fragment" />
 
     <fragment
         android:id="@+id/settingsFragment"

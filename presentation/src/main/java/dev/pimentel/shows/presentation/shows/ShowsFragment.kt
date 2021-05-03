@@ -10,10 +10,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.ShowsFragmentBinding
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
-import dev.pimentel.shows.shared.shows_adapter.ShowsAdapter
 import dev.pimentel.shows.shared.extensions.addEndOfScrollListener
 import dev.pimentel.shows.shared.extensions.watch
 import dev.pimentel.shows.shared.mvi.handleEvent
+import dev.pimentel.shows.shared.shows.ShowsAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,9 +43,7 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
 
         binding.shows.also {
             it.adapter = this.adapter
-
-            val layoutManager = LinearLayoutManager(context)
-            it.layoutManager = layoutManager
+            it.layoutManager = LinearLayoutManager(context)
             it.addEndOfScrollListener { viewModel.publish(ShowsIntention.GetMoreShows) }
         }
     }

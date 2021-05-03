@@ -12,7 +12,7 @@
     <!-- Shows Fragment -->
 
     <!-- Favorites Fragment -->
-    <string name="favorites_fragment">Favorites</string>
+    <string name="favorites_title">Favorites</string>
     <!-- Shows Fragment -->
 
 </resources>
