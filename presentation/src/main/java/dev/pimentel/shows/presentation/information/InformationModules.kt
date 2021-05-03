@@ -1,23 +1,23 @@
-package dev.pimentel.shows.presentation.details
+package dev.pimentel.shows.presentation.information
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import dev.pimentel.shows.presentation.details.data.DetailsState
+import dev.pimentel.shows.presentation.information.data.InformationState
 import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object DetailsModules {
+object InformationViewModelModule {
 
     @Provides
     @ViewModelScoped
-    @DetailsStateQualifier
-    fun provideInitialDetailsState(): DetailsState = DetailsState()
+    @InformationStateQualifier
+    fun provideInitialState(): InformationState = InformationState()
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class DetailsStateQualifier
+annotation class InformationStateQualifier

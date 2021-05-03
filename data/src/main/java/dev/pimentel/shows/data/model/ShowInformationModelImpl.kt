@@ -12,7 +12,7 @@ data class ShowInformationModelImpl(
     override val imageUrl: String?,
     override val isFavorite: Boolean,
     override val schedule: ScheduleModelImpl?,
-    override val episodes: List<ShowInformationModel.EpisodeModel>
+    override val episodes: List<EpisodeModelImpl>
 ) : ShowInformationModel {
 
     data class ScheduleModelImpl(

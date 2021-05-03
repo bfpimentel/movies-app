@@ -14,6 +14,6 @@ interface ShowsRemoteDataSource {
     @GET("/shows")
     suspend fun getShows(@Query("page") page: Int): List<ShowResponseBody>
 
-    @GET("/shows/{showId}")
+    @GET("/shows/{showId}?embed=episodes")
     suspend fun getShowInformation(@Path("showId") showId: Int): ShowResponseBody
 }

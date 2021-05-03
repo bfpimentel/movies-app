@@ -10,7 +10,7 @@ import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object FavoritesModules {
+object FavoritesViewModelModule {
 
     @Provides
     @ViewModelScoped

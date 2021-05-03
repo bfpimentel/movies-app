@@ -38,7 +38,8 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
 
     private fun bindRecyclerView() {
         this.adapter = this.adapterFactory.create(object : ShowsAdapter.ItemListener {
-            override fun favoriteShow(showId: Int) = viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
+            override fun onItemClick(showId: Int) = viewModel.publish(ShowsIntention.NavigateToInformation(showId))
+            override fun onFavoriteClick(showId: Int) = viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
         })
 
         binding.shows.also {
