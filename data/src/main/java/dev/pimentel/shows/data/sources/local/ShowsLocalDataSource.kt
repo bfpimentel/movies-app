@@ -14,6 +14,7 @@ interface ShowsLocalDataSource {
         SELECT * 
         FROM Shows 
         WHERE name LIKE '%' || :query || '%'
+        ORDER BY id ASC
         """
     )
     fun getFavoriteShows(query: String): Flow<List<ShowDTO>>
