@@ -37,7 +37,9 @@ class InformationFragment : Fragment(R.layout.information_fragment) {
 
     private fun bindRecyclerView() {
         this.adapter = this.adapterFactory.create(object : InformationSeasonsAdapter.ItemListener {
-            override fun onSeasonClick(seasonNumber: Int) = Unit
+            override fun onSeasonClick(seasonNumber: Int) =
+                viewModel.publish(InformationIntention.OpenOrCloseSeason(seasonNumber))
+
             override fun onEpisodeClick(episodeId: Int) = Unit
         })
 

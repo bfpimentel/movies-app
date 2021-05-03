@@ -2,6 +2,7 @@ package dev.pimentel.shows.presentation.information
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,7 @@ class InformationSeasonsAdapter @AssistedInject constructor(
         fun bind(item: SeasonViewData) {
             with(binding) {
                 arrow.isSelected = item.isOpen
+                episodes.isVisible = item.isOpen
                 seasonName.text = root.context.getString(R.string.information_seasons_title, item.number)
                 seasonName.setOnClickListener { listener.onSeasonClick(item.number) }
             }

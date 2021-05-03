@@ -14,7 +14,10 @@ import dev.pimentel.shows.presentation.information.data.InformationViewData
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.mvi.StateViewModelImpl
 import dev.pimentel.shows.shared.mvi.toEvent
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +34,7 @@ class InformationViewModel @Inject constructor(
 ), InformationContract.ViewModel {
 
     private var showId: Int? = null
+    private var openOrCloseSeasonPublisher = MutableSharedFlow<Int>()
 
     init {
         viewModelScope.launch(dispatchersProvider.io) { getShowInformation() }
@@ -40,42 +44,47 @@ class InformationViewModel @Inject constructor(
         when (intention) {
             is InformationIntention.SearchShowInformation -> searchInformation(intention.showId)
             is InformationIntention.FavoriteOrRemoveShow -> favoriteOrRemoveShow()
+            is InformationIntention.OpenOrCloseSeason -> openOrCloseSeasonPublisher.emit(intention.seasonNumber)
         }
     }
 
     private suspend fun getShowInformation() {
         try {
-            getShowInformation(NoParams).collect { showInformation ->
-                // TODO: Need to abstract mapping to separate class
-                val viewData = InformationViewData(
-                    name = showInformation.name,
-                    summary = showInformation.summary,
-                    status = showInformation.status,
-                    premieredDate = showInformation.premieredDate ?: "Unknown",
-                    rating = (showInformation.rating ?: 0F) / 2,
-                    imageUrl = showInformation.imageUrl,
-                    isFavorite = showInformation.isFavorite,
-                    schedule = showInformation.schedule?.days?.joinToString { day ->
-                        "$day at ${showInformation.schedule?.time}"
-                    },
-                    seasons = showInformation.episodes.groupBy(ShowInformation.Episode::season)
-                        .map { (season, episodes) ->
-                            InformationViewData.SeasonViewData(
-                                isOpen = (0..1).random() == 0, // TODO: Create second flow
-                                number = season,
-                                episodes = episodes.map { episode ->
-                                    InformationViewData.SeasonViewData.EpisodeViewData(
-                                        id = episode.id,
-                                        number = episode.number,
-                                        name = episode.name
-                                    )
-                                }
-                            )
-                        }
-                )
+            getShowInformation(NoParams)
+                .combine(openOrCloseSeasonPublisher.scan(emptyList<Int>()) { accumulator, value ->
+                    accumulator.toMutableList().apply { if (contains(value)) remove(value) else add(value) }
+                }, ::Pair)
+                .collect { (showInformation, openSeasons) ->
+                    // TODO: Need to abstract mapping to separate class
+                    val viewData = InformationViewData(
+                        name = showInformation.name,
+                        summary = showInformation.summary,
+                        status = showInformation.status,
+                        premieredDate = showInformation.premieredDate ?: "Unknown",
+                        rating = (showInformation.rating ?: 0F) / 2,
+                        imageUrl = showInformation.imageUrl,
+                        isFavorite = showInformation.isFavorite,
+                        schedule = showInformation.schedule?.days?.joinToString { day ->
+                            "$day at ${showInformation.schedule?.time}"
+                        },
+                        seasons = showInformation.episodes.groupBy(ShowInformation.Episode::season)
+                            .map { (seasonNumber, episodes) ->
+                                InformationViewData.SeasonViewData(
+                                    isOpen = openSeasons.contains(seasonNumber),
+                                    number = seasonNumber,
+                                    episodes = episodes.map { episode ->
+                                        InformationViewData.SeasonViewData.EpisodeViewData(
+                                            id = episode.id,
+                                            number = episode.number,
+                                            name = episode.name
+                                        )
+                                    }
+                                )
+                            }
+                    )
 
-                updateState { copy(informationEvent = viewData.toEvent()) }
-            }
+                    updateState { copy(informationEvent = viewData.toEvent()) }
+                }
         } catch (error: Exception) {
             Log.d("GET_SHOW_INFORMATION", "ERROR", error)
         }
