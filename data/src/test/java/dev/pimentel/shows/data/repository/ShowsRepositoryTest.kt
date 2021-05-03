@@ -57,6 +57,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 0,
                 name = "name0",
+                summary = "0",
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -65,6 +66,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 1,
                 name = "name1",
+                summary = "1",
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -75,6 +77,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 2,
                 name = "name2",
+                summary = "2",
                 status = "2",
                 premieredDate = "2",
                 rating = ShowResponseBody.RatingResponseBody(average = 2F),
@@ -83,6 +86,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 3,
                 name = "name3",
+                summary = "3",
                 status = "3",
                 premieredDate = "3",
                 rating = ShowResponseBody.RatingResponseBody(average = 3F),
@@ -191,6 +195,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 0,
                 name = "name0",
+                summary = "0",
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -199,6 +204,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 1,
                 name = "name1",
+                summary = "1",
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -294,6 +300,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 0,
                     name = "breaking bad",
+                    summary = "0",
                     status = "0",
                     premieredDate = "0",
                     rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -306,6 +313,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 1,
                     name = "true detective",
+                    summary = "1",
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -378,6 +386,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 1,
                     name = "true detective",
+                    summary = "1",
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -431,6 +440,7 @@ class ShowsRepositoryTest {
         val showBody = ShowResponseBody(
             id = 1,
             name = "true detective",
+            summary = "1",
             status = "1",
             premieredDate = "1",
             rating = ShowResponseBody.RatingResponseBody(average = 1F),

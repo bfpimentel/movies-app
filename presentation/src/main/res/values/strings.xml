@@ -23,6 +23,11 @@
 
     <!-- Information Fragment -->
     <string name="information_seasons_and_episodes">Seasons and Episodes</string>
+    <string name="information_premier">Premiered: %s</string>
+    <string name="information_status">Status: %s</string>
+    <string name="information_schedule">Schedule:</string>
+    <string name="information_schedule_day">%s at %s</string>
+    <string name="information_unknown_premier_date">Unknown</string>
     <string name="information_seasons_title">Season %d</string>
     <string name="information_episodes_title">#%d - %s</string>
     <!-- Information Fragment -->

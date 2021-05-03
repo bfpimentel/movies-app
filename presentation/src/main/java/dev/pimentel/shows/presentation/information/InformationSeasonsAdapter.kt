@@ -48,6 +48,7 @@ class InformationSeasonsAdapter @AssistedInject constructor(
         }
 
         private fun bindEpisodes(episodes: List<SeasonViewData.EpisodeViewData>) {
+            binding.episodes.removeAllViews()
             episodes.map { episode ->
                 val episodeBinding = InformationEpisodeItemBinding.inflate(
                     LayoutInflater.from(binding.root.context),
@@ -73,6 +74,6 @@ class InformationSeasonsAdapter @AssistedInject constructor(
             oldItem.number == newItem.number
 
         override fun areContentsTheSame(oldItem: SeasonViewData, newItem: SeasonViewData): Boolean =
-            oldItem.isOpen == newItem.isOpen
+            oldItem == newItem
     }
 }

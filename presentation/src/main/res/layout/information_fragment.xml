@@ -75,6 +75,16 @@
                 tools:rating="4" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/premieredDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:textColor="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/rating"
+                tools:text="Premiered: 2021-04-22" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/summary"
                 android:layout_width="@dimen/spacing_none"
                 android:layout_height="wrap_content"
@@ -84,7 +94,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rating"
-                tools:text="@tools:sample/lorem/random[2]" />
+                tools:text="@tools:sample/lorem/random[3]" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/scheduleLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:text="@string/information_schedule"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/summary" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/schedule"
+                android:layout_width="@dimen/spacing_none"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:textColor="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scheduleLabel"
+                tools:text="Sunday at 22:00" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/seasonsLabel"
@@ -97,13 +130,13 @@
                 android:textSize="@dimen/text_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/summary" />
+                app:layout_constraintTop_toBottomOf="@id/schedule" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/seasons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_small"
                 app:layout_constraintTop_toBottomOf="@id/seasonsLabel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

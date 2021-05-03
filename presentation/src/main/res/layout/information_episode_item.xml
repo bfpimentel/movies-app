@@ -9,6 +9,7 @@
         android:id="@+id/episodeName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:padding="@dimen/spacing_medium"
         android:textColor="@color/black"
         android:textSize="@dimen/text_normal"

@@ -58,6 +58,8 @@ class InformationFragment : Fragment(R.layout.information_fragment) {
                     summary.text = data.summary.parseAsHtml()
                     rating.rating = data.rating
                     favorite.isSelected = data.isFavorite
+                    premieredDate.text = getString(R.string.information_premier, data.premieredDate)
+                    schedule.text = data.schedule
                 }
 
                 adapter.submitList(data.seasons)

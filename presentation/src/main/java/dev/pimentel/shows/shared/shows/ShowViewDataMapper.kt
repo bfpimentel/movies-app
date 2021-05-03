@@ -5,12 +5,12 @@ import dev.pimentel.shows.R
 import dev.pimentel.shows.domain.entity.Show
 
 interface ShowViewDataMapper {
-    fun mapAll(shows: List<Show>): List<ShowViewData>
+    suspend fun mapAll(shows: List<Show>): List<ShowViewData>
 }
 
 class ShowViewDataMapperImpl(private val context: Context) : ShowViewDataMapper {
 
-    override fun mapAll(shows: List<Show>): List<ShowViewData> = shows.map { show ->
+    override suspend fun mapAll(shows: List<Show>): List<ShowViewData> = shows.map { show ->
         ShowViewData(
             id = show.id,
             imageUrl = show.imageUrl,

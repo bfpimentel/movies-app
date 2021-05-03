@@ -3,14 +3,13 @@ package dev.pimentel.shows.presentation.information
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.pimentel.shows.domain.entity.ShowInformation
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
 import dev.pimentel.shows.domain.usecase.GetShowInformation
 import dev.pimentel.shows.domain.usecase.NoParams
 import dev.pimentel.shows.domain.usecase.SearchShowInformation
 import dev.pimentel.shows.presentation.information.data.InformationIntention
 import dev.pimentel.shows.presentation.information.data.InformationState
-import dev.pimentel.shows.presentation.information.data.InformationViewData
+import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapper
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.mvi.StateViewModelImpl
 import dev.pimentel.shows.shared.mvi.toEvent
@@ -26,6 +25,7 @@ class InformationViewModel @Inject constructor(
     private val getShowInformation: GetShowInformation,
     private val searchShowInformation: SearchShowInformation,
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
+    private val informationViewDataMapper: InformationViewDataMapper,
     dispatchersProvider: DispatchersProvider,
     @InformationStateQualifier initialState: InformationState
 ) : StateViewModelImpl<InformationState, InformationIntention>(
@@ -51,38 +51,9 @@ class InformationViewModel @Inject constructor(
     private suspend fun getShowInformation() {
         try {
             getShowInformation(NoParams)
-                .combine(openOrCloseSeasonPublisher.scan(emptyList<Int>()) { accumulator, value ->
+                .combine(openOrCloseSeasonPublisher.scan(emptyList()) { accumulator, value ->
                     accumulator.toMutableList().apply { if (contains(value)) remove(value) else add(value) }
-                }, ::Pair)
-                .collect { (showInformation, openSeasons) ->
-                    // TODO: Need to abstract mapping to separate class
-                    val viewData = InformationViewData(
-                        name = showInformation.name,
-                        summary = showInformation.summary,
-                        status = showInformation.status,
-                        premieredDate = showInformation.premieredDate ?: "Unknown",
-                        rating = (showInformation.rating ?: 0F) / 2,
-                        imageUrl = showInformation.imageUrl,
-                        isFavorite = showInformation.isFavorite,
-                        schedule = showInformation.schedule?.days?.joinToString { day ->
-                            "$day at ${showInformation.schedule?.time}"
-                        },
-                        seasons = showInformation.episodes.groupBy(ShowInformation.Episode::season)
-                            .map { (seasonNumber, episodes) ->
-                                InformationViewData.SeasonViewData(
-                                    isOpen = openSeasons.contains(seasonNumber),
-                                    number = seasonNumber,
-                                    episodes = episodes.map { episode ->
-                                        InformationViewData.SeasonViewData.EpisodeViewData(
-                                            id = episode.id,
-                                            number = episode.number,
-                                            name = episode.name
-                                        )
-                                    }
-                                )
-                            }
-                    )
-
+                }, informationViewDataMapper::map).collect { viewData ->
                     updateState { copy(informationEvent = viewData.toEvent()) }
                 }
         } catch (error: Exception) {

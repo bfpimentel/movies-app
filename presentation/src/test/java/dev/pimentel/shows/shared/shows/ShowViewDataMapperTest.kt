@@ -7,6 +7,7 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -16,7 +17,7 @@ class ShowViewDataMapperTest {
     private val showViewDataMapper: ShowViewDataMapper = ShowViewDataMapperImpl(context = context)
 
     @Test
-    fun `should map shows to view data`() {
+    fun `should map shows to view data`() = runBlockingTest {
         val shows = listOf(
             Show(
                 id = 1,
