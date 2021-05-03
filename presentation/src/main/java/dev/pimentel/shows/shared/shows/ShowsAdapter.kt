@@ -22,7 +22,8 @@ class ShowsAdapter @AssistedInject constructor(
     }
 
     interface ItemListener {
-        fun favoriteShow(showId: Int)
+        fun onItemClick(showId: Int)
+        fun onFavoriteClick(showId: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
@@ -42,7 +43,8 @@ class ShowsAdapter @AssistedInject constructor(
                 rating.rating = item.rating
                 favorite.isSelected = item.isFavorite
 
-                favorite.setOnClickListener { listener.favoriteShow(showId = item.id) }
+                root.setOnClickListener { listener.onItemClick(item.id) }
+                favorite.setOnClickListener { listener.onFavoriteClick(showId = item.id) }
             }
         }
     }

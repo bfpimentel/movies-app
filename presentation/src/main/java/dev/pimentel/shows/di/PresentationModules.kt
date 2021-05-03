@@ -8,6 +8,8 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
+import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapper
+import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapperImpl
 import dev.pimentel.shows.shared.dispatchers.AppDispatchersProvider
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.navigator.Navigator
@@ -50,6 +52,11 @@ object PresentationMapperModule {
     @ViewModelScoped
     fun provideShowViewDataMapper(@ApplicationContext context: Context): ShowViewDataMapper =
         ShowViewDataMapperImpl(context = context)
+
+    @Provides
+    @ViewModelScoped
+    fun provideInformationViewDataMapper(@ApplicationContext context: Context): InformationViewDataMapper =
+        InformationViewDataMapperImpl(context = context)
 }
 
 @Qualifier

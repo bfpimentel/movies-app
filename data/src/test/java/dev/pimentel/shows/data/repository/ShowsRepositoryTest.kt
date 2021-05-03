@@ -4,10 +4,12 @@ import app.cash.turbine.test
 import dev.pimentel.shows.data.body.ShowResponseBody
 import dev.pimentel.shows.data.body.ShowSearchResponseBody
 import dev.pimentel.shows.data.dto.ShowDTO
+import dev.pimentel.shows.data.model.ShowInformationModelImpl
 import dev.pimentel.shows.data.model.ShowModelImpl
 import dev.pimentel.shows.data.model.ShowsPageModelImpl
 import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.shows.data.sources.remote.ShowsRemoteDataSource
+import dev.pimentel.shows.domain.model.ShowInformationModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.GetShows
@@ -58,6 +60,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 0,
                 name = "name0",
+                summary = "0",
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -66,6 +69,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 1,
                 name = "name1",
+                summary = "1",
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -76,6 +80,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 2,
                 name = "name2",
+                summary = "2",
                 status = "2",
                 premieredDate = "2",
                 rating = ShowResponseBody.RatingResponseBody(average = 2F),
@@ -84,6 +89,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 3,
                 name = "name3",
+                summary = "3",
                 status = "3",
                 premieredDate = "3",
                 rating = ShowResponseBody.RatingResponseBody(average = 3F),
@@ -192,6 +198,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 0,
                 name = "name0",
+                summary = "0",
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -200,6 +207,7 @@ class ShowsRepositoryTest {
             ShowResponseBody(
                 id = 1,
                 name = "name1",
+                summary = "1",
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -295,6 +303,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 0,
                     name = "breaking bad",
+                    summary = "0",
                     status = "0",
                     premieredDate = "0",
                     rating = ShowResponseBody.RatingResponseBody(average = 0F),
@@ -307,6 +316,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 1,
                     name = "true detective",
+                    summary = "1",
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -379,6 +389,7 @@ class ShowsRepositoryTest {
                 ShowResponseBody(
                     id = 1,
                     name = "true detective",
+                    summary = "1",
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -432,6 +443,7 @@ class ShowsRepositoryTest {
         val showBody = ShowResponseBody(
             id = 1,
             name = "true detective",
+            summary = "1",
             status = "1",
             premieredDate = "1",
             rating = ShowResponseBody.RatingResponseBody(average = 1F),
@@ -539,7 +551,78 @@ class ShowsRepositoryTest {
         coVerify(exactly = 1) {
             showsLocalDataSource.getFavoriteShows(query)
         }
+        confirmEverythingVerified()
+    }
 
+    @Test
+    fun `should get show information with its favorites`() = runBlocking {
+        val showId = 0
+
+        val showResponseBody = ShowResponseBody(
+            id = 0,
+            name = "0",
+            summary = "0",
+            status = "0",
+            premieredDate = "0",
+            rating = ShowResponseBody.RatingResponseBody(average = 0F),
+            image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+            schedule = ShowResponseBody.ScheduleResponseBody("0", listOf("0")),
+            embedded = ShowResponseBody.EmbeddedResponseBody(
+                episodes = listOf(
+                    ShowResponseBody.EmbeddedResponseBody.EpisodeResponseBody(
+                        id = 0,
+                        number = 0,
+                        season = 0,
+                        name = "0",
+                        summary = "0",
+                        image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+                        airDate = "0",
+                        airTime = "0"
+                    )
+                )
+            )
+        )
+
+        val showInfoModel: ShowInformationModel = ShowInformationModelImpl(
+            id = 0,
+            name = "0",
+            summary = "0",
+            status = "0",
+            premieredDate = "0",
+            rating = 0F,
+            imageUrl = "0",
+            isFavorite = true,
+            schedule = ShowInformationModelImpl.ScheduleModelImpl(time = "0", days = listOf("0")),
+            episodes = listOf(
+                ShowInformationModelImpl.EpisodeModelImpl(
+                    id = 0,
+                    number = 0,
+                    season = 0,
+                    name = "0",
+                    summary = "0",
+                    imageUrl = "0",
+                    airDate = "0",
+                    airTime = "0"
+                )
+            )
+        )
+
+        every { showsLocalDataSource.getFavoriteShowsIds() } returns flowOf(listOf(showId))
+        coEvery { showsRemoteDataSource.getShowInformation(showId) } returns showResponseBody
+
+        val repository = getRepositoryInstance()
+
+        repository.getShowInformation().test {
+            repository.searchShowInformation(showId)
+            assertEquals(expectItem(), showInfoModel)
+
+            cancel()
+        }
+
+        coVerify(exactly = 1) {
+            showsLocalDataSource.getFavoriteShowsIds()
+            showsRemoteDataSource.getShowInformation(showId)
+        }
         confirmEverythingVerified()
     }
 

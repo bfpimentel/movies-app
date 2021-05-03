@@ -2,7 +2,6 @@ package dev.pimentel.shows.presentation.favorites
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.FavoritesFragmentBinding
 import dev.pimentel.shows.presentation.favorites.data.FavoritesIntention
+import dev.pimentel.shows.shared.extensions.addSearchListeners
 import dev.pimentel.shows.shared.extensions.watch
 import dev.pimentel.shows.shared.mvi.handleEvent
 import dev.pimentel.shows.shared.shows.ShowsAdapter
@@ -30,37 +30,20 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
         binding = FavoritesFragmentBinding.bind(view)
 
         bindRecyclerView()
-        bindToolbar()
         bindOutputs()
         bindInputs()
     }
 
     private fun bindRecyclerView() {
         this.adapter = this.adapterFactory.create(object : ShowsAdapter.ItemListener {
-            override fun favoriteShow(showId: Int) = viewModel.publish(FavoritesIntention.FavoriteOrRemoveShow(showId))
+            override fun onItemClick(showId: Int) = viewModel.publish(FavoritesIntention.NavigateToInformation(showId))
+            override fun onFavoriteClick(showId: Int) =
+                viewModel.publish(FavoritesIntention.FavoriteOrRemoveShow(showId))
         })
 
         binding.shows.also {
             it.adapter = this.adapter
             it.layoutManager = LinearLayoutManager(context)
-        }
-    }
-
-    private fun bindToolbar() {
-        binding.toolbar.menu.findItem(R.id.search).actionView.also {
-            val searchView = it as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
-
-                override fun onQueryTextChange(query: String?): Boolean {
-                    viewModel.publish(FavoritesIntention.SearchFavorites(query.orEmpty()))
-                    return false
-                }
-            })
-            searchView.setOnCloseListener {
-                viewModel.publish(FavoritesIntention.SearchFavorites())
-                false
-            }
         }
     }
 
@@ -71,6 +54,12 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
     }
 
     private fun bindInputs() {
+        binding.toolbar.addSearchListeners(
+            menuId = R.id.search,
+            onTextChanged = { query -> viewModel.publish(FavoritesIntention.SearchFavorites(query)) },
+            onClose = { viewModel.publish(FavoritesIntention.SearchFavorites()) }
+        )
+
         viewModel.publish(FavoritesIntention.SearchFavorites())
     }
 }

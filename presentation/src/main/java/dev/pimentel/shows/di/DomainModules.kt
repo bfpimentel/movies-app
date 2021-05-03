@@ -9,8 +9,10 @@ import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
 import dev.pimentel.shows.domain.usecase.GetFavorites
 import dev.pimentel.shows.domain.usecase.GetMoreShows
+import dev.pimentel.shows.domain.usecase.GetShowInformation
 import dev.pimentel.shows.domain.usecase.GetShows
 import dev.pimentel.shows.domain.usecase.SearchFavorites
+import dev.pimentel.shows.domain.usecase.SearchShowInformation
 import dev.pimentel.shows.domain.usecase.SearchShows
 
 @Module
@@ -29,6 +31,11 @@ object DomainUseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun provideSearchShows(showsRepository: ShowsRepository): SearchShows =
+        SearchShows(showsRepository = showsRepository)
+
+    @Provides
+    @ViewModelScoped
     fun provideFavoriteOrRemoveShow(showsRepository: ShowsRepository): FavoriteOrRemoveShow =
         FavoriteOrRemoveShow(showsRepository = showsRepository)
 
@@ -44,6 +51,11 @@ object DomainUseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideSearchShows(showsRepository: ShowsRepository): SearchShows =
-        SearchShows(showsRepository = showsRepository)
+    fun provideGetShowInformation(showsRepository: ShowsRepository): GetShowInformation =
+        GetShowInformation(showsRepository = showsRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSearchShowInformation(showsRepository: ShowsRepository): SearchShowInformation =
+        SearchShowInformation(showsRepository = showsRepository)
 }

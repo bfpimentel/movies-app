@@ -11,20 +11,35 @@
         android:label="ShowsFragment"
         tools:layout="@layout/shows_fragment">
         <action
-            android:id="@+id/toShowsFragment"
-            app:destination="@id/showsFragment" />
+            android:id="@+id/toInformationFragment"
+            app:destination="@id/informationFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="dev.pimentel.shows.presentation.favorites.FavoritesFragment"
         android:label="FavoritesFragment"
-        tools:layout="@layout/favorites_fragment" />
+        tools:layout="@layout/favorites_fragment">
+        <action
+            android:id="@+id/toInformationFragment"
+            app:destination="@id/informationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="dev.pimentel.shows.presentation.shows.ShowsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/shows_fragment" />
+
+    <fragment
+        android:id="@+id/informationFragment"
+        android:name="dev.pimentel.shows.presentation.information.InformationFragment"
+        android:label="InformationFragment"
+        tools:layout="@layout/information_fragment">
+        <argument
+            android:name="showId"
+            app:argType="integer" />
+    </fragment>
+
 
 </navigation>

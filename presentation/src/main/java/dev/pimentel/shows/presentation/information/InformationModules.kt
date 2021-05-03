@@ -1,23 +1,23 @@
-package dev.pimentel.shows.presentation.favorites
+package dev.pimentel.shows.presentation.information
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import dev.pimentel.shows.presentation.favorites.data.FavoritesState
+import dev.pimentel.shows.presentation.information.data.InformationState
 import javax.inject.Qualifier
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object FavoritesViewModelModule {
+object InformationViewModelModule {
 
     @Provides
     @ViewModelScoped
-    @FavoritesStateQualifier
-    fun provideInitialState(): FavoritesState = FavoritesState()
+    @InformationStateQualifier
+    fun provideInitialState(): InformationState = InformationState()
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class FavoritesStateQualifier
+annotation class InformationStateQualifier
