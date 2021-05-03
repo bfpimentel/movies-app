@@ -14,7 +14,8 @@ data class InformationViewData(
 
     data class SeasonViewData(
         val number: Int,
-        val episodes: List<EpisodeViewData>
+        val episodes: List<EpisodeViewData>,
+        val isOpen: Boolean
     ) {
 
         data class EpisodeViewData(

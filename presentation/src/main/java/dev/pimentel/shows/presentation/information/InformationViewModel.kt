@@ -61,6 +61,7 @@ class InformationViewModel @Inject constructor(
                     seasons = showInformation.episodes.groupBy(ShowInformation.Episode::season)
                         .map { (season, episodes) ->
                             InformationViewData.SeasonViewData(
+                                isOpen = (0..1).random() == 0, // TODO: Create second flow
                                 number = season,
                                 episodes = episodes.map { episode ->
                                     InformationViewData.SeasonViewData.EpisodeViewData(

@@ -19,6 +19,12 @@
 
     <!-- Favorites Fragment -->
     <string name="favorites_title">Favorites</string>
-    <!-- Shows Fragment -->
+    <!-- Favorites Fragment -->
+
+    <!-- Information Fragment -->
+    <string name="information_seasons_and_episodes">Seasons and Episodes</string>
+    <string name="information_seasons_title">Season %d</string>
+    <string name="information_episodes_title">#%d - %s</string>
+    <!-- Information Fragment -->
 
 </resources>
