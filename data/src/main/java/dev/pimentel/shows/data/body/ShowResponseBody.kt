@@ -6,9 +6,9 @@ data class ShowResponseBody(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
     @Json(name = "status") val status: String,
-    @Json(name = "premiered") val premieredDate: String,
+    @Json(name = "premiered") val premieredDate: String?,
+    @Json(name = "image") val image: ImageResponseBody?,
     @Json(name = "rating") val rating: RatingResponseBody,
-    @Json(name = "image") val image: ImageResponseBody,
 ) {
 
     data class RatingResponseBody(

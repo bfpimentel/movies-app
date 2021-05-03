@@ -11,6 +11,7 @@ import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.GetShows
 import kotlinx.coroutines.flow.*
+import retrofit2.HttpException
 
 class ShowsRepositoryImpl(
     private val showsRemoteDataSource: ShowsRemoteDataSource,
@@ -20,50 +21,60 @@ class ShowsRepositoryImpl(
     private val getShowsPublisher = MutableSharedFlow<Pair<Int, String?>>()
 
     override fun getShows(): Flow<ShowsPageModel> =
-        combine(
-            getShowsPublisher.debounce(GET_SHOWS_DEBOUNCE_INTERVAL),
-            showsLocalDataSource.getFavoriteShowsIds()
-        ) { (page, query), favoriteIds -> Triple(page, query, favoriteIds) }
-            .mapLatest { (page, query, favoriteIds) ->
+        getShowsPublisher
+            .debounce(GET_SHOWS_DEBOUNCE_INTERVAL)
+            .mapLatest { (page, query) ->
                 val shows = if (query == null) showsRemoteDataSource.getShows(page = page)
                 else showsRemoteDataSource.getShows(query = query).map(ShowSearchResponseBody::info)
 
-                Triple(page, query, shows.mapAllToModel(favoriteIds))
+                Triple(page, query, shows)
             }
             .distinctUntilChanged()
-            .catch { emit(Triple(GetShows.NO_MORE_PAGES, null, emptyList())) }
-            .scan(
-                ShowsPageModelImpl(
-                    shows = emptyList(),
-                    nextPage = DEFAULT_PAGE
-                )
-            ) { accumulator, (page, query, shows) ->
-                when {
-                    query != null -> ShowsPageModelImpl(shows = shows, nextPage = DEFAULT_PAGE)
-                    page == DEFAULT_PAGE -> ShowsPageModelImpl(shows = shows, nextPage = page + NEXT_PAGE_MODIFIER)
-                    else -> ShowsPageModelImpl(shows = accumulator.shows + shows, nextPage = page + NEXT_PAGE_MODIFIER)
+            .catch { error ->
+                if ((error as? HttpException)?.code() == 404) {
+                    emit(Triple(GetShows.NO_MORE_PAGES, null, emptyList()))
                 }
+            }
+            .scan(Pair(emptyList<ShowResponseBody>(), DEFAULT_PAGE)) { (lastShows, _), (page, query, shows) ->
+                when {
+                    query != null -> Pair(shows, DEFAULT_PAGE)
+                    page == DEFAULT_PAGE -> Pair(shows, page + NEXT_PAGE_MODIFIER)
+                    else -> Pair(lastShows + shows, page + NEXT_PAGE_MODIFIER)
+                }
+            }.combine(showsLocalDataSource.getFavoriteShowsIds()) { (shows, nextPage), favoriteIds ->
+                ShowsPageModelImpl(shows = shows.mapAllToModel(favoriteIds), nextPage = nextPage)
             }
 
     override suspend fun getMoreShows(nextPage: Int) = getShowsPublisher.emit(Pair(nextPage, null))
 
     override suspend fun searchShows(query: String) = getShowsPublisher.emit(Pair(DEFAULT_PAGE, query))
 
-    override suspend fun favoriteShow(showId: Int) = showsLocalDataSource.saveFavoriteShow(
-        ShowDTO(id = showId, name = "Placeholder") // TODO: Get show details from endpoint and then save it
-    )
-
-    override suspend fun removeShowFromFavorites(showId: Int) = showsLocalDataSource.removeShowFromFavorites(showId)
+    override suspend fun favoriteOrRemoveShow(showId: Int) {
+        if (showsLocalDataSource.getFavoriteById(showId) == null) {
+            showsLocalDataSource.saveFavoriteShow(
+                ShowDTO(id = showId, name = "Placeholder") // TODO: Get show details from endpoint and then save it
+            )
+        } else {
+            showsLocalDataSource.removeShowFromFavorites(showId)
+        }
+    }
 
     private fun List<ShowResponseBody>.mapAllToModel(favoriteIds: List<Int>) = map { show ->
         ShowModelImpl(
             id = show.id,
             name = show.name,
             status = show.status,
-            premieredDate = show.premieredDate,
+            premieredDate = show.premieredDate ?: "unknown",
             rating = show.rating.average,
-            imageUrl = show.image.originalUrl,
+            imageUrl = show.image?.originalUrl.orEmpty(),
             isFavorite = favoriteIds.contains(show.id)
+        )
+    }
+
+    private fun ShowResponseBody.mapToDTO(): ShowDTO = let { body ->
+        ShowDTO(
+            id = body.id,
+            name = body.name,
         )
     }
 

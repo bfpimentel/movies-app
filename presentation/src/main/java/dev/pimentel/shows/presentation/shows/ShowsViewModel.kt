@@ -18,7 +18,7 @@ import javax.inject.Inject
 class ShowsViewModel @Inject constructor(
     private val getShows: GetShows,
     private val getMoreShows: GetMoreShows,
-    private val favoriteShow: FavoriteShow,
+    private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
     private val searchShows: SearchShows,
     dispatchersProvider: DispatchersProvider,
     @WelcomeStateQualifier initialState: ShowsState
@@ -37,7 +37,7 @@ class ShowsViewModel @Inject constructor(
         when (intention) {
             is ShowsIntention.GetMoreShows -> getMoreShows()
             is ShowsIntention.SearchShows -> searchShows(intention.query)
-            is ShowsIntention.FavoriteShow -> favoriteShow(FavoriteShow.Params(intention.showId))
+            is ShowsIntention.FavoriteShow -> favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(intention.showId))
         }
     }
 

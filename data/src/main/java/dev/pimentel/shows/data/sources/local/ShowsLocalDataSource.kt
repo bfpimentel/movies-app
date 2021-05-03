@@ -20,4 +20,7 @@ interface ShowsLocalDataSource {
 
     @Query("SELECT * FROM Shows")
     suspend fun getFavoriteShows(): List<ShowDTO>
+
+    @Query("SELECT * FROM Shows where id == :showId")
+    suspend fun getFavoriteById(showId: Int): ShowDTO?
 }
