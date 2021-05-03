@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -15,10 +15,12 @@ import dev.pimentel.shows.presentation.episode.data.EpisodeIntention
 import dev.pimentel.shows.shared.extensions.watch
 
 @AndroidEntryPoint
-class EpisodeFragment : Fragment(R.layout.episode_fragment) {
+class EpisodeFragment : DialogFragment(R.layout.episode_fragment) {
 
     private lateinit var binding: EpisodeFragmentBinding
     private val viewModel: EpisodeContract.ViewModel by viewModels<EpisodeViewModel>()
+
+    override fun getTheme(): Int = R.style.Theme_Dialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

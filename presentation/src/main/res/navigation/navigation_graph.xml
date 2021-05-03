@@ -44,7 +44,7 @@
             app:destination="@id/episodeFragment" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/episodeFragment"
         android:name="dev.pimentel.shows.presentation.episode.EpisodeFragment"
         android:label="EpisodeFragment"
@@ -58,6 +58,6 @@
         <argument
             android:name="episodeNumber"
             app:argType="integer" />
-    </fragment>
+    </dialog>
 
 </navigation>
