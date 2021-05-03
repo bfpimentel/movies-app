@@ -17,7 +17,8 @@ class GetShows(private val showsRepository: ShowsRepository) : UseCase<NoParams,
                     status = showsModel.status,
                     premieredDate = showsModel.premieredDate,
                     rating = showsModel.rating,
-                    imageUrl = showsModel.imageUrl
+                    imageUrl = showsModel.imageUrl,
+                    isFavorite = showsModel.isFavorite
                 )
             },
             nextPage = showsPageModel.nextPage

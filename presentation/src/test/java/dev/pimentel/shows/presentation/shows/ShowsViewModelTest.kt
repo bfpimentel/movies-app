@@ -3,15 +3,10 @@ package dev.pimentel.shows.presentation.shows
 import dev.pimentel.shows.ViewModelTest
 import dev.pimentel.shows.domain.entity.Show
 import dev.pimentel.shows.domain.entity.ShowsPage
-import dev.pimentel.shows.domain.usecase.GetMoreShows
-import dev.pimentel.shows.domain.usecase.GetShows
-import dev.pimentel.shows.domain.usecase.NoParams
-import dev.pimentel.shows.domain.usecase.SearchShows
+import dev.pimentel.shows.domain.usecase.*
 import dev.pimentel.shows.presentation.shows.data.ShowViewData
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
-import dev.pimentel.shows.presentation.shows.ShowsContract
-import dev.pimentel.shows.presentation.shows.ShowsViewModel
 import io.mockk.*
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
@@ -21,6 +16,7 @@ import org.junit.jupiter.api.Test
 
 class ShowsViewModelTest : ViewModelTest() {
 
+    private val favoriteOrRemoveShow = mockk<FavoriteOrRemoveShow>()
     private val getShows = mockk<GetShows>()
     private val getMoreShows = mockk<GetMoreShows>()
     private val searchShows = mockk<SearchShows>()
@@ -35,7 +31,8 @@ class ShowsViewModelTest : ViewModelTest() {
                     status = "status1",
                     premieredDate = "date1",
                     rating = 2F,
-                    imageUrl = "image1"
+                    imageUrl = "image1",
+                    isFavorite = false
                 ),
                 Show(
                     id = 2,
@@ -43,7 +40,8 @@ class ShowsViewModelTest : ViewModelTest() {
                     status = "status2",
                     premieredDate = "date2",
                     rating = 4F,
-                    imageUrl = "image2"
+                    imageUrl = "image2",
+                    isFavorite = false
                 ),
             ),
             nextPage = 1
@@ -56,7 +54,8 @@ class ShowsViewModelTest : ViewModelTest() {
                 status = "status1",
                 premieredDate = "date1",
                 rating = 1F,
-                imageUrl = "image1"
+                imageUrl = "image1",
+                isFavorite = false
             ),
             ShowViewData(
                 id = 2,
@@ -64,7 +63,8 @@ class ShowsViewModelTest : ViewModelTest() {
                 status = "status2",
                 premieredDate = "date2",
                 rating = 2F,
-                imageUrl = "image2"
+                imageUrl = "image2",
+                isFavorite = false
             ),
         )
 
@@ -134,6 +134,25 @@ class ShowsViewModelTest : ViewModelTest() {
         confirmEverythingVerified()
     }
 
+    @Test
+    fun `should favorite or remove show`() = runBlockingTest {
+        val showId = 1
+
+        val viewModel = getViewModelInstance()
+
+        val favoriteOrRemoveShowParams = FavoriteOrRemoveShow.Params(showId)
+
+        coJustRun { favoriteOrRemoveShow(favoriteOrRemoveShowParams) }
+
+        viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
+
+        coVerify(exactly = 1) {
+            getShows(NoParams)
+            favoriteOrRemoveShow(favoriteOrRemoveShowParams)
+        }
+        confirmEverythingVerified()
+    }
+
     private fun getViewModelInstance(
         doBefore: (() -> Unit)? = null
     ): ShowsContract.ViewModel {
@@ -146,6 +165,7 @@ class ShowsViewModelTest : ViewModelTest() {
             getShows = getShows,
             getMoreShows = getMoreShows,
             searchShows = searchShows,
+            favoriteOrRemoveShow = favoriteOrRemoveShow,
             initialState = initialState
         )
     }
@@ -154,7 +174,8 @@ class ShowsViewModelTest : ViewModelTest() {
         confirmVerified(
             getShows,
             getMoreShows,
-            searchShows
+            searchShows,
+            favoriteOrRemoveShow
         )
     }
 

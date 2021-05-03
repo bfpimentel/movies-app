@@ -3,10 +3,7 @@ package dev.pimentel.shows.presentation.shows
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.pimentel.shows.domain.usecase.GetMoreShows
-import dev.pimentel.shows.domain.usecase.GetShows
-import dev.pimentel.shows.domain.usecase.NoParams
-import dev.pimentel.shows.domain.usecase.SearchShows
+import dev.pimentel.shows.domain.usecase.*
 import dev.pimentel.shows.presentation.shows.data.ShowViewData
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
@@ -21,6 +18,7 @@ import javax.inject.Inject
 class ShowsViewModel @Inject constructor(
     private val getShows: GetShows,
     private val getMoreShows: GetMoreShows,
+    private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
     private val searchShows: SearchShows,
     dispatchersProvider: DispatchersProvider,
     @WelcomeStateQualifier initialState: ShowsState
@@ -39,20 +37,23 @@ class ShowsViewModel @Inject constructor(
         when (intention) {
             is ShowsIntention.GetMoreShows -> getMoreShows()
             is ShowsIntention.SearchShows -> searchShows(intention.query)
+            is ShowsIntention.FavoriteOrRemoveShow -> favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(intention.showId))
         }
     }
 
     private suspend fun getShows() {
         try {
             getShows(NoParams).collect { showsPage ->
+                // TODO: Need to abstract mapping to a separate class
                 val showsViewData = showsPage.shows.map { show ->
                     ShowViewData(
                         id = show.id,
                         imageUrl = show.imageUrl,
                         name = show.name,
-                        premieredDate = show.premieredDate,
+                        premieredDate = show.premieredDate ?: "Unknown",
                         status = show.status,
-                        rating = (show.rating ?: DEFAULT_RATING) / FIVE_STAR_RATING_DIVIDER
+                        rating = (show.rating ?: DEFAULT_RATING) / FIVE_STAR_RATING_DIVIDER,
+                        isFavorite = show.isFavorite
                     )
                 }
 

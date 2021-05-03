@@ -13,6 +13,7 @@ task createTestReport(type: JacocoReport) {
 
     dependsOn("presentation:testDebugUnitTest", "domain:test", "data:testDebugUnitTest")
 
+
     final commonFileExclusions = [
             '**/*Module*.*',
             '**/models',
@@ -24,7 +25,7 @@ task createTestReport(type: JacocoReport) {
             '**/BuildConfig.*',
             '**/R.class',
             '**/R$*.class',
-            '**/*Module*.*',
+            '**/*Modules*.*',
             '**/*Adapter*.*',
             '**/*ViewHolder*.*',
             '**/*Activity*.*',
@@ -33,15 +34,18 @@ task createTestReport(type: JacocoReport) {
             '**/*Params.*',
             '**/*Application.*',
             '**/*State.*',
+            '**/*ViewData.*',
             '**/*Intention.*',
             '**/DispatchersProvider*.*',
             '**/extensions/*',
     ]
 
     final dataFileExclusions = [
-            '**/*Database**.*',
-            '**/*RemoteDataSource**.*',
-            '**/*LocalDataSource**.*',
+            '**/*Database*.*',
+            '**/*RemoteDataSource*.*',
+            '**/*LocalDataSource*.*',
+            '**/*DTO*.*',
+            '**/*Body.*',
     ]
 
     final classDirectoriesTrees = [

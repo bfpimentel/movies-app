@@ -9,6 +9,6 @@ interface ShowsContract {
     interface ViewModel : StateViewModel<ShowsState, ShowsIntention>
 
     interface ItemListener {
-
+        fun favoriteShow(showId: Int)
     }
 }
