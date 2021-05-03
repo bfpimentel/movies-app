@@ -10,7 +10,13 @@ import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.shows.data.sources.remote.ShowsRemoteDataSource
 import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
-import io.mockk.*
+import dev.pimentel.shows.domain.usecase.GetShows
+import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
@@ -18,10 +24,14 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import retrofit2.HttpException
+import retrofit2.Response
 import kotlin.time.seconds
 
 class ShowsRepositoryTest {
@@ -150,6 +160,108 @@ class ShowsRepositoryTest {
 
         coEvery { showsRemoteDataSource.getShows(page = 0) } returns showsFirstPageResponseBody
         coEvery { showsRemoteDataSource.getShows(page = 1) } returns showsSecondPageResponseBody
+        coEvery { showsLocalDataSource.getFavoriteShowsIds() } returns flowOf(favoriteIds)
+
+        val repository = getRepositoryInstance()
+
+        repository.getShows().test(2.seconds) {
+            assertEquals(expectItem(), initialShowsPageValue)
+
+            delay(1.seconds)
+            repository.getMoreShows(0)
+            assertEquals(expectItem(), showsFirstPageModel)
+
+            delay(1.seconds)
+            repository.getMoreShows(1)
+            assertEquals(expectItem(), showsSecondPageModel)
+
+            cancel()
+        }
+
+        coVerify(exactly = 1) {
+            showsRemoteDataSource.getShows(page = 0)
+            showsRemoteDataSource.getShows(page = 1)
+            showsLocalDataSource.getFavoriteShowsIds()
+        }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should just get one page and then one emission from NO_MORE_PAGES error`() = runBlocking {
+        val showsFirstPageResponseBody = listOf(
+            ShowResponseBody(
+                id = 0,
+                name = "name0",
+                status = "0",
+                premieredDate = "0",
+                rating = ShowResponseBody.RatingResponseBody(average = 0F),
+                image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+            ),
+            ShowResponseBody(
+                id = 1,
+                name = "name1",
+                status = "1",
+                premieredDate = "1",
+                rating = ShowResponseBody.RatingResponseBody(average = 1F),
+                image = ShowResponseBody.ImageResponseBody(originalUrl = "1"),
+            ),
+        )
+
+        val favoriteIds = listOf(1, 2)
+
+        val showsFirstPageModel: ShowsPageModel = ShowsPageModelImpl(
+            shows = listOf(
+                ShowModelImpl(
+                    id = 0,
+                    name = "name0",
+                    status = "0",
+                    premieredDate = "0",
+                    rating = 0F,
+                    imageUrl = "0",
+                    isFavorite = false
+                ),
+                ShowModelImpl(
+                    id = 1,
+                    name = "name1",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = 1F,
+                    imageUrl = "1",
+                    isFavorite = true
+                ),
+            ),
+            nextPage = 1
+        )
+        val showsSecondPageModel: ShowsPageModel = ShowsPageModelImpl(
+            shows = listOf(
+                ShowModelImpl(
+                    id = 0,
+                    name = "name0",
+                    status = "0",
+                    premieredDate = "0",
+                    rating = 0F,
+                    imageUrl = "0",
+                    isFavorite = false
+                ),
+                ShowModelImpl(
+                    id = 1,
+                    name = "name1",
+                    status = "1",
+                    premieredDate = "1",
+                    rating = 1F,
+                    imageUrl = "1",
+                    isFavorite = true
+                ),
+            ),
+            nextPage = GetShows.NO_MORE_PAGES
+        )
+
+        val httpException = HttpException(
+            Response.error<String>(404, "".toResponseBody("text/text".toMediaType()))
+        )
+
+        coEvery { showsRemoteDataSource.getShows(page = 0) } returns showsFirstPageResponseBody
+        coEvery { showsRemoteDataSource.getShows(page = 1) } throws httpException
         coEvery { showsLocalDataSource.getFavoriteShowsIds() } returns flowOf(favoriteIds)
 
         val repository = getRepositoryInstance()
@@ -366,6 +478,68 @@ class ShowsRepositoryTest {
             showsLocalDataSource.isFavorite(showId)
             showsLocalDataSource.removeShowFromFavorites(showId)
         }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should search favorites`() = runBlocking {
+        val query = "query"
+
+        val favoriteShows = listOf(
+            ShowDTO(
+                id = 1,
+                name = "true detective",
+                status = "1",
+                premieredDate = "1",
+                rating = 1F,
+                imageUrl = "1"
+            ),
+            ShowDTO(
+                id = 2,
+                name = "breaking bad",
+                status = "2",
+                premieredDate = "2",
+                rating = 2F,
+                imageUrl = "2"
+            ),
+        )
+
+        val showModels = listOf(
+            ShowModelImpl(
+                id = 1,
+                name = "true detective",
+                status = "1",
+                premieredDate = "1",
+                rating = 1F,
+                imageUrl = "1",
+                isFavorite = true
+            ),
+            ShowModelImpl(
+                id = 2,
+                name = "breaking bad",
+                status = "2",
+                premieredDate = "2",
+                rating = 2F,
+                imageUrl = "2",
+                isFavorite = true
+            )
+        )
+
+        coEvery { showsLocalDataSource.getFavoriteShows(query) } returns flowOf(favoriteShows)
+
+        val repository = getRepositoryInstance()
+
+        repository.getFavoriteShows().test {
+            repository.searchFavorites(query)
+            assertEquals(expectItem(), showModels)
+
+            cancel()
+        }
+
+        coVerify(exactly = 1) {
+            showsLocalDataSource.getFavoriteShows(query)
+        }
+
         confirmEverythingVerified()
     }
 

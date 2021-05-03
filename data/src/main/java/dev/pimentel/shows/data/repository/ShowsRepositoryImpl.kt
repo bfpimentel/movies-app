@@ -11,7 +11,16 @@ import dev.pimentel.shows.domain.model.ShowModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.GetShows
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.scan
 import retrofit2.HttpException
 
 class ShowsRepositoryImpl(
@@ -40,6 +49,7 @@ class ShowsRepositoryImpl(
                 when {
                     query != null -> Pair(shows, DEFAULT_PAGE)
                     page == DEFAULT_PAGE -> Pair(shows, page + NEXT_PAGE_MODIFIER)
+                    page == GetShows.NO_MORE_PAGES -> Pair(lastShows, page)
                     else -> Pair(lastShows + shows, page + NEXT_PAGE_MODIFIER)
                 }
             }
@@ -66,8 +76,6 @@ class ShowsRepositoryImpl(
     }
 
     override suspend fun searchFavorites(query: String) = favoriteSearchPublisher.emit(query)
-
-    override suspend fun getShowInformation(showId: Int): ShowModel = TODO()
 
     private fun List<ShowResponseBody>.mapAllToModel(favoriteIds: List<Int>) = map { show ->
         ShowModelImpl(

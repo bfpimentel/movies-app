@@ -174,7 +174,8 @@ class ShowsViewModelTest : ViewModelTest() {
         confirmVerified(
             getShows,
             getMoreShows,
-            searchShows
+            searchShows,
+            favoriteOrRemoveShow
         )
     }
 
