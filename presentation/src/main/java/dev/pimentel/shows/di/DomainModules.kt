@@ -7,8 +7,10 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
+import dev.pimentel.shows.domain.usecase.GetFavorites
 import dev.pimentel.shows.domain.usecase.GetMoreShows
 import dev.pimentel.shows.domain.usecase.GetShows
+import dev.pimentel.shows.domain.usecase.SearchFavorites
 import dev.pimentel.shows.domain.usecase.SearchShows
 
 @Module
@@ -29,6 +31,16 @@ object DomainUseCaseModule {
     @ViewModelScoped
     fun provideFavoriteOrRemoveShow(showsRepository: ShowsRepository): FavoriteOrRemoveShow =
         FavoriteOrRemoveShow(showsRepository = showsRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetFavorites(showsRepository: ShowsRepository): GetFavorites =
+        GetFavorites(showsRepository = showsRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideSearchFavorites(showsRepository: ShowsRepository): SearchFavorites =
+        SearchFavorites(showsRepository = showsRepository)
 
     @Provides
     @ViewModelScoped

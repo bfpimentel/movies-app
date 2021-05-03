@@ -1,4 +1,4 @@
-package dev.pimentel.shows.presentation.shows
+package dev.pimentel.shows.presentation.favorites
 
 import android.os.Bundle
 import android.view.View
@@ -8,19 +8,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.pimentel.shows.R
-import dev.pimentel.shows.databinding.ShowsFragmentBinding
-import dev.pimentel.shows.presentation.shows.data.ShowsIntention
-import dev.pimentel.shows.shared.extensions.addEndOfScrollListener
+import dev.pimentel.shows.databinding.FavoritesFragmentBinding
+import dev.pimentel.shows.presentation.favorites.data.FavoritesIntention
 import dev.pimentel.shows.shared.extensions.watch
 import dev.pimentel.shows.shared.mvi.handleEvent
 import dev.pimentel.shows.shared.shows.ShowsAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ShowsFragment : Fragment(R.layout.shows_fragment) {
+class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
 
-    private lateinit var binding: ShowsFragmentBinding
-    private val viewModel: ShowsContract.ViewModel by viewModels<ShowsViewModel>()
+    private lateinit var binding: FavoritesFragmentBinding
+    private val viewModel: FavoritesContract.ViewModel by viewModels<FavoritesViewModel>()
 
     @Inject
     lateinit var adapterFactory: ShowsAdapter.Factory
@@ -28,7 +27,7 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = ShowsFragmentBinding.bind(view)
+        binding = FavoritesFragmentBinding.bind(view)
 
         bindRecyclerView()
         bindToolbar()
@@ -38,13 +37,12 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
 
     private fun bindRecyclerView() {
         this.adapter = this.adapterFactory.create(object : ShowsAdapter.ItemListener {
-            override fun favoriteShow(showId: Int) = viewModel.publish(ShowsIntention.FavoriteOrRemoveShow(showId))
+            override fun favoriteShow(showId: Int) = viewModel.publish(FavoritesIntention.FavoriteOrRemoveShow(showId))
         })
 
         binding.shows.also {
             it.adapter = this.adapter
             it.layoutManager = LinearLayoutManager(context)
-            it.addEndOfScrollListener { viewModel.publish(ShowsIntention.GetMoreShows) }
         }
     }
 
@@ -55,12 +53,12 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
                 override fun onQueryTextSubmit(query: String?): Boolean = false
 
                 override fun onQueryTextChange(query: String?): Boolean {
-                    viewModel.publish(ShowsIntention.SearchShows(query.orEmpty()))
+                    viewModel.publish(FavoritesIntention.SearchFavorites(query.orEmpty()))
                     return false
                 }
             })
             searchView.setOnCloseListener {
-                viewModel.publish(ShowsIntention.GetMoreShows)
+                viewModel.publish(FavoritesIntention.SearchFavorites())
                 false
             }
         }
@@ -73,6 +71,6 @@ class ShowsFragment : Fragment(R.layout.shows_fragment) {
     }
 
     private fun bindInputs() {
-        viewModel.publish(ShowsIntention.GetMoreShows)
+        viewModel.publish(FavoritesIntention.SearchFavorites())
     }
 }

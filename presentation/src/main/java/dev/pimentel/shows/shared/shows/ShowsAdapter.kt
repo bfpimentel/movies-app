@@ -1,4 +1,4 @@
-package dev.pimentel.shows.presentation.shows
+package dev.pimentel.shows.shared.shows
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,16 +9,20 @@ import coil.load
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.ShowsItemBinding
-import dev.pimentel.shows.presentation.shows.data.ShowViewData
 
 class ShowsAdapter @AssistedInject constructor(
-    @Assisted private val listener: ShowsContract.ItemListener
+    @Assisted private val listener: ItemListener
 ) : ListAdapter<ShowViewData, ShowsAdapter.ViewHolder>(Diff) {
 
     @AssistedFactory
     interface Factory {
-        fun create(listener: ShowsContract.ItemListener): ShowsAdapter
+        fun create(listener: ItemListener): ShowsAdapter
+    }
+
+    interface ItemListener {
+        fun favoriteShow(showId: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
@@ -33,8 +37,8 @@ class ShowsAdapter @AssistedInject constructor(
             with(binding) {
                 image.load(item.imageUrl)
                 name.text = item.name
-                premieredDate.text = item.premieredDate
-                status.text = item.status
+                premieredDate.text = root.context.getString(R.string.shows_item_premier, item.premieredDate)
+                status.text = root.context.getString(R.string.shows_item_status, item.status)
                 rating.rating = item.rating
                 favorite.isSelected = item.isFavorite
 

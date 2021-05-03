@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 class GetShowsTest {
 
     private val showsRepository = mockk<ShowsRepository>()
-    private val useCase = GetShows(showsRepository)
+    private val getShows = GetShows(showsRepository)
 
     @Test
     fun `should get shows and map them to entities`() = runBlockingTest {
@@ -73,7 +73,7 @@ class GetShowsTest {
 
         coEvery { showsRepository.getShows() } returns flowOf(showsPageModel)
 
-        assertEquals(useCase(NoParams).first(), showsPage)
+        assertEquals(getShows(NoParams).first(), showsPage)
 
         coVerify(exactly = 1) { showsRepository.getShows() }
         confirmVerified(showsRepository)

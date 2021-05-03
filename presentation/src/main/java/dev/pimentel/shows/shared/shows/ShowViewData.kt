@@ -1,4 +1,4 @@
-package dev.pimentel.shows.presentation.shows.data
+package dev.pimentel.shows.shared.shows
 
 data class ShowViewData(
     val id: Int,

@@ -35,7 +35,7 @@ class ShowsRepositoryImpl(
         getShowsPublisher
             .debounce(GET_SHOWS_DEBOUNCE_INTERVAL)
             .mapLatest { (page, query) ->
-                val shows = if (query == null) showsRemoteDataSource.getShows(page = page)
+                val shows = if (query.isNullOrEmpty()) showsRemoteDataSource.getShows(page = page)
                 else showsRemoteDataSource.getShows(query = query).map(ShowSearchResponseBody::info)
                 Triple(page, query, shows)
             }

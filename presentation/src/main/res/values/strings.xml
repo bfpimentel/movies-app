@@ -7,12 +7,18 @@
     <string name="navigation_settings">Settings</string>
     <!-- Navigation Menu -->
 
+    <!-- Shows Item -->
+    <string name="shows_item_premier">Premiered: %s</string>
+    <string name="shows_item_status">Status: %s</string>
+    <string name="shows_item_unknown_premier_date">Unknown</string>
+    <!-- Shows Item -->
+
     <!-- Shows Fragment -->
     <string name="shows_title">Shows</string>
     <!-- Shows Fragment -->
 
     <!-- Favorites Fragment -->
-    <string name="favorites_fragment">Favorites</string>
+    <string name="favorites_title">Favorites</string>
     <!-- Shows Fragment -->
 
 </resources>

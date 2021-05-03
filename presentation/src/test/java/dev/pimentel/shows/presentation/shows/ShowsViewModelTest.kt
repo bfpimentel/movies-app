@@ -3,11 +3,21 @@ package dev.pimentel.shows.presentation.shows
 import dev.pimentel.shows.ViewModelTest
 import dev.pimentel.shows.domain.entity.Show
 import dev.pimentel.shows.domain.entity.ShowsPage
-import dev.pimentel.shows.domain.usecase.*
-import dev.pimentel.shows.presentation.shows.data.ShowViewData
+import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
+import dev.pimentel.shows.domain.usecase.GetMoreShows
+import dev.pimentel.shows.domain.usecase.GetShows
+import dev.pimentel.shows.domain.usecase.NoParams
+import dev.pimentel.shows.domain.usecase.SearchShows
 import dev.pimentel.shows.presentation.shows.data.ShowsIntention
 import dev.pimentel.shows.presentation.shows.data.ShowsState
-import io.mockk.*
+import dev.pimentel.shows.shared.shows.ShowViewData
+import dev.pimentel.shows.shared.shows.ShowViewDataMapper
+import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -20,6 +30,7 @@ class ShowsViewModelTest : ViewModelTest() {
     private val getShows = mockk<GetShows>()
     private val getMoreShows = mockk<GetMoreShows>()
     private val searchShows = mockk<SearchShows>()
+    private val showViewDataMapper = mockk<ShowViewDataMapper>()
 
     @Test
     fun `should get shows`() = runBlockingTest {
@@ -70,6 +81,7 @@ class ShowsViewModelTest : ViewModelTest() {
 
         val viewModel = getViewModelInstance {
             coEvery { getShows(NoParams) } returns flowOf(showsPage)
+            every { showViewDataMapper.mapAll(showsPage.shows) } returns showsViewData
         }
 
         val showsStateValues = arrayListOf<ShowsState>()
@@ -78,7 +90,10 @@ class ShowsViewModelTest : ViewModelTest() {
         val firstShowsState = showsStateValues[0]
         assertEquals(firstShowsState.showsEvent!!.value, showsViewData)
 
-        coVerify(exactly = 1) { getShows(NoParams) }
+        coVerify(exactly = 1) {
+            getShows(NoParams)
+            showViewDataMapper.mapAll(showsPage.shows)
+        }
         confirmEverythingVerified()
 
         showsStateJob.cancel()
@@ -97,6 +112,7 @@ class ShowsViewModelTest : ViewModelTest() {
         coVerify(exactly = 1) {
             getShows(NoParams)
             getMoreShows(getMoreShowsParams)
+            showViewDataMapper.mapAll(emptyList())
         }
         confirmEverythingVerified()
     }
@@ -105,12 +121,16 @@ class ShowsViewModelTest : ViewModelTest() {
     fun `should not get more shows when there are no more pages`() = runBlockingTest {
         val showsPage = ShowsPage(shows = emptyList(), nextPage = GetShows.NO_MORE_PAGES)
 
-        val viewModel = getViewModelInstance { coEvery { getShows(NoParams) } returns flowOf(showsPage) }
+        val viewModel = getViewModelInstance {
+            coEvery { getShows(NoParams) } returns flowOf(showsPage)
+            every { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
+        }
 
         viewModel.publish(ShowsIntention.GetMoreShows)
 
         coVerify(exactly = 1) {
             getShows(NoParams)
+            showViewDataMapper.mapAll(emptyList())
         }
         confirmEverythingVerified()
     }
@@ -130,6 +150,7 @@ class ShowsViewModelTest : ViewModelTest() {
         coVerify(exactly = 1) {
             getShows(NoParams)
             searchShows(searchShowsParams)
+            showViewDataMapper.mapAll(emptyList())
         }
         confirmEverythingVerified()
     }
@@ -149,16 +170,18 @@ class ShowsViewModelTest : ViewModelTest() {
         coVerify(exactly = 1) {
             getShows(NoParams)
             favoriteOrRemoveShow(favoriteOrRemoveShowParams)
+            showViewDataMapper.mapAll(emptyList())
         }
         confirmEverythingVerified()
     }
 
-    private fun getViewModelInstance(
-        doBefore: (() -> Unit)? = null
-    ): ShowsContract.ViewModel {
+    private fun getViewModelInstance(doBefore: (() -> Unit)? = null): ShowsContract.ViewModel {
         doBefore
             ?.invoke()
-            ?: run { coEvery { getShows(NoParams) } returns flowOf(ShowsPage(shows = emptyList(), nextPage = 1)) }
+            ?: run {
+                coEvery { getShows(NoParams) } returns flowOf(ShowsPage(shows = emptyList(), nextPage = 1))
+                every { showViewDataMapper.mapAll(emptyList()) } returns emptyList()
+            }
 
         return ShowsViewModel(
             dispatchersProvider = dispatchersProvider,
@@ -166,6 +189,7 @@ class ShowsViewModelTest : ViewModelTest() {
             getMoreShows = getMoreShows,
             searchShows = searchShows,
             favoriteOrRemoveShow = favoriteOrRemoveShow,
+            showViewDataMapper = showViewDataMapper,
             initialState = initialState
         )
     }
@@ -175,7 +199,8 @@ class ShowsViewModelTest : ViewModelTest() {
             getShows,
             getMoreShows,
             searchShows,
-            favoriteOrRemoveShow
+            favoriteOrRemoveShow,
+            showViewDataMapper
         )
     }
 
