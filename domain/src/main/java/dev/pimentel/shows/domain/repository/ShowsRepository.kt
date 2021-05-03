@@ -10,5 +10,6 @@ interface ShowsRepository {
     suspend fun searchShows(query: String)
     suspend fun getMoreShows(nextPage: Int)
     suspend fun favoriteOrRemoveShow(showId: Int)
+    suspend fun searchFavorites(query: String)
     suspend fun getShowInformation(showId: Int): ShowModel
 }

@@ -32,7 +32,7 @@ class ShowsRepositoryImpl(
             }
             .distinctUntilChanged()
             .catch { error ->
-                if ((error as? HttpException)?.code() == 404) {
+                if ((error as? HttpException)?.code() == NO_MORE_PAGES_CODE) {
                     emit(Triple(GetShows.NO_MORE_PAGES, null, emptyList()))
                 }
             }
@@ -56,13 +56,16 @@ class ShowsRepositoryImpl(
     override suspend fun searchShows(query: String) = getShowsPublisher.emit(Pair(DEFAULT_PAGE, query))
 
     override suspend fun favoriteOrRemoveShow(showId: Int) {
-        if (showsLocalDataSource.getFavoriteById(showId) == null) {
-            val newFavoriteShow = showsRemoteDataSource.getShowInformation(showId).mapToDTO()
-            showsLocalDataSource.saveFavoriteShow(newFavoriteShow)
-        } else {
+        if (showsLocalDataSource.isFavorite(showId)) {
             showsLocalDataSource.removeShowFromFavorites(showId)
+            return
         }
+
+        val newFavoriteShow = showsRemoteDataSource.getShowInformation(showId).mapToDTO()
+        showsLocalDataSource.saveFavoriteShow(newFavoriteShow)
     }
+
+    override suspend fun searchFavorites(query: String) = favoriteSearchPublisher.emit(query)
 
     override suspend fun getShowInformation(showId: Int): ShowModel = TODO()
 
@@ -105,5 +108,6 @@ class ShowsRepositoryImpl(
         const val GET_SHOWS_DEBOUNCE_INTERVAL = 1000L
         const val DEFAULT_PAGE = 0
         const val NEXT_PAGE_MODIFIER = 1
+        const val NO_MORE_PAGES_CODE = 404
     }
 }

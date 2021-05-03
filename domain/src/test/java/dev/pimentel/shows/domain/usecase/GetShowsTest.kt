@@ -5,8 +5,6 @@ import dev.pimentel.shows.domain.entity.ShowsPage
 import dev.pimentel.shows.domain.model.ShowModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
 import dev.pimentel.shows.domain.repository.ShowsRepository
-import dev.pimentel.shows.domain.usecase.GetShows
-import dev.pimentel.shows.domain.usecase.NoParams
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
@@ -34,6 +32,7 @@ class GetShowsTest {
                         override val premieredDate: String = "date1"
                         override val rating: Float = 1F
                         override val imageUrl: String = "image1"
+                        override val isFavorite: Boolean = false
                     },
                     object : ShowModel {
                         override val id: Int = 2
@@ -42,6 +41,7 @@ class GetShowsTest {
                         override val premieredDate: String = "date2"
                         override val rating: Float = 2F
                         override val imageUrl: String = "image2"
+                        override val isFavorite: Boolean = false
                     }
                 )
                 override val nextPage: Int = 1
@@ -55,7 +55,8 @@ class GetShowsTest {
                     status = "status1",
                     premieredDate = "date1",
                     rating = 1F,
-                    imageUrl = "image1"
+                    imageUrl = "image1",
+                    isFavorite = false
                 ),
                 Show(
                     id = 2,
@@ -63,7 +64,8 @@ class GetShowsTest {
                     status = "status2",
                     premieredDate = "date2",
                     rating = 2F,
-                    imageUrl = "image2"
+                    imageUrl = "image2",
+                    isFavorite = false
                 ),
             ),
             nextPage = 1

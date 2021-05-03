@@ -39,10 +39,12 @@ interface ShowsLocalDataSource {
 
     @Query(
         """
-        SELECT * 
-        FROM Shows 
-        WHERE id == :showId
+        SELECT EXISTS (
+            SELECT 1
+            FROM Shows 
+            WHERE id == :showId
+        )
         """
     )
-    suspend fun getFavoriteById(showId: Int): ShowDTO?
+    suspend fun isFavorite(showId: Int): Boolean
 }

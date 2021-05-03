@@ -37,7 +37,7 @@ class ShowsViewModel @Inject constructor(
         when (intention) {
             is ShowsIntention.GetMoreShows -> getMoreShows()
             is ShowsIntention.SearchShows -> searchShows(intention.query)
-            is ShowsIntention.FavoriteShow -> favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(intention.showId))
+            is ShowsIntention.FavoriteOrRemoveShow -> favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(intention.showId))
         }
     }
 
