@@ -9,6 +9,7 @@ import coil.load
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dev.pimentel.shows.R
 import dev.pimentel.shows.databinding.ShowsItemBinding
 
 class ShowsAdapter @AssistedInject constructor(
@@ -36,8 +37,8 @@ class ShowsAdapter @AssistedInject constructor(
             with(binding) {
                 image.load(item.imageUrl)
                 name.text = item.name
-                premieredDate.text = item.premieredDate
-                status.text = item.status
+                premieredDate.text = root.context.getString(R.string.shows_item_premier, item.premieredDate)
+                status.text = root.context.getString(R.string.shows_item_status, item.status)
                 rating.rating = item.rating
                 favorite.isSelected = item.isFavorite
 

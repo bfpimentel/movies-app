@@ -16,14 +16,17 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_small"
         android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:ellipsize="end"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/premieredDate"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toTopOf="@id/image"
         tools:text="Breaking Bad" />
