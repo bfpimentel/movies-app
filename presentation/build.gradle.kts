@@ -52,9 +52,11 @@ dependencies {
     implementation(Libs.Android.materialDesign)
     implementation(Libs.Android.fragment)
     implementation(Libs.Android.startup)
-    implementation(Libs.Android.lifecycleCommon)
+    implementation(Libs.Android.lifecycleRuntime)
 
     implementation(Libs.Kotlin.coroutinesCore)
+
+    implementation(Libs.Coil.core)
 
     implementation(Libs.Navigation.fragment)
     implementation(Libs.Navigation.ui)
@@ -62,6 +64,7 @@ dependencies {
     implementation(Libs.Hilt.android)
     kapt(Libs.Hilt.compiler)
 
+    testImplementation(Libs.Test.turbine)
     testImplementation(Libs.Test.androidTestCore)
     testImplementation(Libs.Test.coroutinesCore)
     testImplementation(Libs.Test.mockk)

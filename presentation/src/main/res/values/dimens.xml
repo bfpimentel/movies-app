@@ -19,4 +19,18 @@
     <dimen name="text_huge">32sp</dimen>
     <!-- Text Defaults -->
 
+    <!-- Shows Fragment -->
+    <dimen name="shows_item_picture_width">120dp</dimen>
+    <dimen name="shows_item_picture_height">140dp</dimen>
+    <!-- Shows Fragment -->
+
+    <!-- Information Fragment -->
+    <dimen name="information_poster_height">380dp</dimen>
+    <dimen name="information_scroll_space_height">348dp</dimen>
+    <!-- Information Fragment -->
+
+    <!-- Episode Fragment -->
+    <dimen name="episode_picture_height">240dp</dimen>
+    <!-- Episode Fragment -->
+
 </resources>

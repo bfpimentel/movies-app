@@ -13,6 +13,7 @@ task createTestReport(type: JacocoReport) {
 
     dependsOn("presentation:testDebugUnitTest", "domain:test", "data:testDebugUnitTest")
 
+
     final commonFileExclusions = [
             '**/*Module*.*',
             '**/models',
@@ -30,14 +31,21 @@ task createTestReport(type: JacocoReport) {
             '**/*Fragment*.*',
             '**/*Initializer.*',
             '**/*Params.*',
-            '**/EmojiFilter.*',
+            '**/*Application.*',
+            '**/*Contract.*',
+            '**/*State.*',
+            '**/*ViewData.*',
+            '**/*Intention.*',
             '**/DispatchersProvider*.*',
-            '**/presentation/**/data/*.*',
             '**/extensions/*',
     ]
 
     final dataFileExclusions = [
-            '**/*Database**.*'
+            '**/*Database*.*',
+            '**/*RemoteDataSource*.*',
+            '**/*LocalDataSource*.*',
+            '**/*DTO*.*',
+            '**/*Body.*',
     ]
 
     final classDirectoriesTrees = [

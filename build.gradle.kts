@@ -39,8 +39,11 @@ subprojects {
         kotlinOptions {
             languageVersion = "1.4"
             jvmTarget = Config.Versions.Kotlin.jvmTarget
-            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlinx.coroutines.FlowPreview"
+            freeCompilerArgs = freeCompilerArgs + listOf(
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xopt-in=kotlinx.coroutines.FlowPreview",
+                "-Xopt-in=kotlin.time.ExperimentalTime"
+            )
         }
     }
 }

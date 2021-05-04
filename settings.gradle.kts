@@ -1,4 +1,4 @@
-rootProject.name = "Template"
+rootProject.name = "Shows"
 
 include(":presentation")
 include(":domain")
