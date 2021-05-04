@@ -1,4 +1,15 @@
-# Android App Template
+# TV Show Android App 
+
+Project using the latest Android APIs and best practices, using asynchronous communication with the local database and remote server.
+
+## Some notes
+
+I am not the best UI/UX guy, so I tried to show my architecture, unit testing, libraries and design pattern knowledge at most of the time. 
+
+Each of the features has its own [branch](https://github.com/bfpimentel/tv-shows-app/branches) and I organized myself using the board [Feature Roadmap](https://github.com/bfpimentel/tv-shows-app/projects/1). I followed the [**conventional**](https://www.conventionalcommits.org/en/v1.0.0/) [commits messages](https://github.com/bfpimentel/tv-shows-app/commits/develop).
+
+The code coverage tool that I use ([codecov.io](https://codecov.io/)) was not working properly, I couldn't see any coverage reports in the web app, so I tried to cover at least 80% of code looking on the basic report.
+
 
 ## Architecture Explanation
 
