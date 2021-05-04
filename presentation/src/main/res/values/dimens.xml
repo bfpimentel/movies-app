@@ -20,7 +20,8 @@
     <!-- Text Defaults -->
 
     <!-- Shows Fragment -->
-    <dimen name="shows_item_picture_size">120dp</dimen>
+    <dimen name="shows_item_picture_width">120dp</dimen>
+    <dimen name="shows_item_picture_height">140dp</dimen>
     <!-- Shows Fragment -->
 
     <!-- Information Fragment -->

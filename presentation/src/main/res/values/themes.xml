@@ -23,4 +23,9 @@
         <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 
+    <style name="Theme.ImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/spacing_small</item>
+    </style>
+
 </resources>
