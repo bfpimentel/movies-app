@@ -1,5 +1,6 @@
 package dev.pimentel.shows.domain.usecase
 
+import dev.pimentel.shows.domain.entity.Episode
 import dev.pimentel.shows.domain.entity.ShowInformation
 import dev.pimentel.shows.domain.repository.ShowsRepository
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +26,7 @@ class GetShowInformation(private val showsRepository: ShowsRepository) : UseCase
                     )
                 },
                 episodes = showModel.episodes.map { episode ->
-                    ShowInformation.Episode(
+                    Episode(
                         id = episode.id,
                         number = episode.number,
                         season = episode.season,

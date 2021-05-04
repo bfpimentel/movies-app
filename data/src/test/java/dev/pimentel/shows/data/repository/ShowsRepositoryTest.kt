@@ -1,9 +1,12 @@
 package dev.pimentel.shows.data.repository
 
 import app.cash.turbine.test
+import dev.pimentel.shows.data.body.EpisodeResponseBody
+import dev.pimentel.shows.data.body.ImageResponseBody
 import dev.pimentel.shows.data.body.ShowResponseBody
 import dev.pimentel.shows.data.body.ShowSearchResponseBody
 import dev.pimentel.shows.data.dto.ShowDTO
+import dev.pimentel.shows.data.model.EpisodeModelImpl
 import dev.pimentel.shows.data.model.ShowInformationModelImpl
 import dev.pimentel.shows.data.model.ShowModelImpl
 import dev.pimentel.shows.data.model.ShowsPageModelImpl
@@ -64,7 +67,7 @@ class ShowsRepositoryTest {
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+                image = ImageResponseBody(originalUrl = "0"),
             ),
             ShowResponseBody(
                 id = 1,
@@ -73,7 +76,7 @@ class ShowsRepositoryTest {
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "1"),
+                image = ImageResponseBody(originalUrl = "1"),
             ),
         )
         val showsSecondPageResponseBody = listOf(
@@ -84,7 +87,7 @@ class ShowsRepositoryTest {
                 status = "2",
                 premieredDate = "2",
                 rating = ShowResponseBody.RatingResponseBody(average = 2F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "2"),
+                image = ImageResponseBody(originalUrl = "2"),
             ),
             ShowResponseBody(
                 id = 3,
@@ -93,7 +96,7 @@ class ShowsRepositoryTest {
                 status = "3",
                 premieredDate = "3",
                 rating = ShowResponseBody.RatingResponseBody(average = 3F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "3"),
+                image = ImageResponseBody(originalUrl = "3"),
             ),
         )
 
@@ -202,7 +205,7 @@ class ShowsRepositoryTest {
                 status = "0",
                 premieredDate = "0",
                 rating = ShowResponseBody.RatingResponseBody(average = 0F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+                image = ImageResponseBody(originalUrl = "0"),
             ),
             ShowResponseBody(
                 id = 1,
@@ -211,7 +214,7 @@ class ShowsRepositoryTest {
                 status = "1",
                 premieredDate = "1",
                 rating = ShowResponseBody.RatingResponseBody(average = 1F),
-                image = ShowResponseBody.ImageResponseBody(originalUrl = "1"),
+                image = ImageResponseBody(originalUrl = "1"),
             ),
         )
 
@@ -307,7 +310,7 @@ class ShowsRepositoryTest {
                     status = "0",
                     premieredDate = "0",
                     rating = ShowResponseBody.RatingResponseBody(average = 0F),
-                    image = ShowResponseBody.ImageResponseBody(originalUrl = "0")
+                    image = ImageResponseBody(originalUrl = "0")
                 )
             )
         )
@@ -320,7 +323,7 @@ class ShowsRepositoryTest {
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
-                    image = ShowResponseBody.ImageResponseBody(originalUrl = "1")
+                    image = ImageResponseBody(originalUrl = "1")
                 )
             )
         )
@@ -393,7 +396,7 @@ class ShowsRepositoryTest {
                     status = "1",
                     premieredDate = "1",
                     rating = ShowResponseBody.RatingResponseBody(average = 1F),
-                    image = ShowResponseBody.ImageResponseBody(originalUrl = "1")
+                    image = ImageResponseBody(originalUrl = "1")
                 )
             )
         )
@@ -447,7 +450,7 @@ class ShowsRepositoryTest {
             status = "1",
             premieredDate = "1",
             rating = ShowResponseBody.RatingResponseBody(average = 1F),
-            image = ShowResponseBody.ImageResponseBody(originalUrl = "1")
+            image = ImageResponseBody(originalUrl = "1")
         )
 
         val showToBeSaved = ShowDTO(
@@ -565,17 +568,17 @@ class ShowsRepositoryTest {
             status = "0",
             premieredDate = "0",
             rating = ShowResponseBody.RatingResponseBody(average = 0F),
-            image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+            image = ImageResponseBody(originalUrl = "0"),
             schedule = ShowResponseBody.ScheduleResponseBody("0", listOf("0")),
             embedded = ShowResponseBody.EmbeddedResponseBody(
                 episodes = listOf(
-                    ShowResponseBody.EmbeddedResponseBody.EpisodeResponseBody(
+                    EpisodeResponseBody(
                         id = 0,
                         number = 0,
                         season = 0,
                         name = "0",
                         summary = "0",
-                        image = ShowResponseBody.ImageResponseBody(originalUrl = "0"),
+                        image = ImageResponseBody(originalUrl = "0"),
                         airDate = "0",
                         airTime = "0"
                     )
@@ -594,7 +597,7 @@ class ShowsRepositoryTest {
             isFavorite = true,
             schedule = ShowInformationModelImpl.ScheduleModelImpl(time = "0", days = listOf("0")),
             episodes = listOf(
-                ShowInformationModelImpl.EpisodeModelImpl(
+                EpisodeModelImpl(
                     id = 0,
                     number = 0,
                     season = 0,
@@ -623,6 +626,40 @@ class ShowsRepositoryTest {
             showsLocalDataSource.getFavoriteShowsIds()
             showsRemoteDataSource.getShowInformation(showId)
         }
+        confirmEverythingVerified()
+    }
+
+    @Test
+    fun `should get episode information`() = runBlocking {
+        val episodeResponseBody = EpisodeResponseBody(
+            id = 0,
+            number = 0,
+            season = 0,
+            name = "0",
+            summary = "0",
+            image = ImageResponseBody(originalUrl = "0"),
+            airDate = "0",
+            airTime = "0"
+        )
+
+        val episodeModel = EpisodeModelImpl(
+            id = 0,
+            number = 0,
+            season = 0,
+            name = "0",
+            summary = "0",
+            imageUrl = "0",
+            airDate = "0",
+            airTime = "0"
+        )
+
+        coEvery { showsRemoteDataSource.getEpisodeInformation(0, 0, 0) } returns episodeResponseBody
+
+        val repository = getRepositoryInstance()
+
+        assertEquals(repository.getEpisodeInformation(0, 0, 0), episodeModel)
+
+        coVerify(exactly = 1) { showsRemoteDataSource.getEpisodeInformation(0, 0, 0) }
         confirmEverythingVerified()
     }
 

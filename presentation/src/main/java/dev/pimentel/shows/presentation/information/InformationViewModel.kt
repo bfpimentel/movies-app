@@ -3,6 +3,7 @@ package dev.pimentel.shows.presentation.information
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.pimentel.shows.di.NavigatorRouterQualifier
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
 import dev.pimentel.shows.domain.usecase.GetShowInformation
 import dev.pimentel.shows.domain.usecase.NoParams
@@ -13,6 +14,7 @@ import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMap
 import dev.pimentel.shows.shared.dispatchers.DispatchersProvider
 import dev.pimentel.shows.shared.mvi.StateViewModelImpl
 import dev.pimentel.shows.shared.mvi.toEvent
+import dev.pimentel.shows.shared.navigator.NavigatorRouter
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -22,6 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InformationViewModel @Inject constructor(
+    @NavigatorRouterQualifier private val navigator: NavigatorRouter,
     private val getShowInformation: GetShowInformation,
     private val searchShowInformation: SearchShowInformation,
     private val favoriteOrRemoveShow: FavoriteOrRemoveShow,
@@ -45,6 +48,7 @@ class InformationViewModel @Inject constructor(
             is InformationIntention.SearchShowInformation -> searchInformation(intention.showId)
             is InformationIntention.FavoriteOrRemoveShow -> favoriteOrRemoveShow()
             is InformationIntention.OpenOrCloseSeason -> openOrCloseSeasonPublisher.emit(intention.seasonNumber)
+            is InformationIntention.OpenEpisode -> openEpisode(intention.seasonNumber, intention.episodeNumber)
         }
     }
 
@@ -69,5 +73,14 @@ class InformationViewModel @Inject constructor(
 
     private suspend fun favoriteOrRemoveShow() {
         favoriteOrRemoveShow(FavoriteOrRemoveShow.Params(this.showId!!))
+    }
+
+    private suspend fun openEpisode(seasonNumber: Int, episodeNumber: Int) {
+        val directions = InformationFragmentDirections.toEpisodeFragment(
+            showId = this.showId!!,
+            seasonNumber = seasonNumber,
+            episodeNumber = episodeNumber
+        )
+        navigator.navigate(directions)
     }
 }

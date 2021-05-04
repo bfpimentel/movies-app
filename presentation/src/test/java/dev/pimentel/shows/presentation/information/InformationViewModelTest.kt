@@ -2,6 +2,7 @@ package dev.pimentel.shows.presentation.information
 
 import app.cash.turbine.test
 import dev.pimentel.shows.ViewModelTest
+import dev.pimentel.shows.domain.entity.Episode
 import dev.pimentel.shows.domain.entity.ShowInformation
 import dev.pimentel.shows.domain.usecase.FavoriteOrRemoveShow
 import dev.pimentel.shows.domain.usecase.GetShowInformation
@@ -11,6 +12,7 @@ import dev.pimentel.shows.presentation.information.data.InformationIntention
 import dev.pimentel.shows.presentation.information.data.InformationState
 import dev.pimentel.shows.presentation.information.data.InformationViewData
 import dev.pimentel.shows.presentation.information.mapper.InformationViewDataMapper
+import dev.pimentel.shows.shared.navigator.NavigatorRouter
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test
 
 class InformationViewModelTest : ViewModelTest() {
 
+    private val navigator = mockk<NavigatorRouter>()
     private val getShowInformation = mockk<GetShowInformation>()
     private val searchShowInformation = mockk<SearchShowInformation>()
     private val favoriteOrRemoveShow = mockk<FavoriteOrRemoveShow>()
@@ -88,6 +91,30 @@ class InformationViewModelTest : ViewModelTest() {
         confirmEverythingVerified()
     }
 
+    @Test
+    fun `should navigate to episode`() = runBlockingTest {
+        val showId = 0
+
+        val searchShowInformationParams = SearchShowInformation.Params(showId)
+        val directions = InformationFragmentDirections.toEpisodeFragment(0, 0, 0)
+
+        coJustRun { searchShowInformation(searchShowInformationParams) }
+        coJustRun { navigator.navigate(directions) }
+
+        val viewModel = getViewModelInstance()
+
+        viewModel.publish(InformationIntention.SearchShowInformation(showId))
+        viewModel.publish(InformationIntention.OpenEpisode(seasonNumber = 0, episodeNumber = 0))
+
+        coVerify(exactly = 1) {
+            getShowInformation(NoParams)
+            informationViewDataMapper.map(showInformation, emptyList())
+            searchShowInformation(searchShowInformationParams)
+            navigator.navigate(directions)
+        }
+        confirmEverythingVerified()
+    }
+
     // Test never finishes, there is some problem with the runBlockingTest that hasn't been fixed for more than 1 year.
     // Even tried using Turbine, but in this case I couldn't make it work
 //    @Test
@@ -148,6 +175,7 @@ class InformationViewModelTest : ViewModelTest() {
             }
 
         return InformationViewModel(
+            navigator = navigator,
             getShowInformation = getShowInformation,
             searchShowInformation = searchShowInformation,
             favoriteOrRemoveShow = favoriteOrRemoveShow,
@@ -180,7 +208,7 @@ class InformationViewModelTest : ViewModelTest() {
             isFavorite = true,
             schedule = ShowInformation.Schedule(time = "0", days = listOf("0")),
             episodes = listOf(
-                ShowInformation.Episode(
+                Episode(
                     id = 0,
                     number = 0,
                     season = 0,

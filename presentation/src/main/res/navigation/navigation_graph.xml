@@ -39,7 +39,25 @@
         <argument
             android:name="showId"
             app:argType="integer" />
+        <action
+            android:id="@+id/toEpisodeFragment"
+            app:destination="@id/episodeFragment" />
     </fragment>
 
+    <dialog
+        android:id="@+id/episodeFragment"
+        android:name="dev.pimentel.shows.presentation.episode.EpisodeFragment"
+        android:label="EpisodeFragment"
+        tools:layout="@layout/episode_fragment">
+        <argument
+            android:name="showId"
+            app:argType="integer" />
+        <argument
+            android:name="seasonNumber"
+            app:argType="integer" />
+        <argument
+            android:name="episodeNumber"
+            app:argType="integer" />
+    </dialog>
 
 </navigation>

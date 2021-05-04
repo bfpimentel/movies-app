@@ -2,6 +2,7 @@ package dev.pimentel.shows.presentation.information.mapper
 
 import android.content.Context
 import dev.pimentel.shows.R
+import dev.pimentel.shows.domain.entity.Episode
 import dev.pimentel.shows.domain.entity.ShowInformation
 import dev.pimentel.shows.presentation.information.data.InformationViewData
 
@@ -29,7 +30,7 @@ class InformationViewDataMapperImpl(
                 context.getString(R.string.information_schedule_day, day, showInformation.schedule?.time)
             },
             seasons = showInformation.episodes
-                .groupBy(ShowInformation.Episode::season)
+                .groupBy(Episode::season)
                 .map { (seasonNumber, episodes) ->
                     InformationViewData.SeasonViewData(
                         isOpen = openSeasons.contains(seasonNumber),

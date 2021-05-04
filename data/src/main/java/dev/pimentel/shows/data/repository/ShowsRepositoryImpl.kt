@@ -1,13 +1,16 @@
 package dev.pimentel.shows.data.repository
 
+import dev.pimentel.shows.data.body.EpisodeResponseBody
 import dev.pimentel.shows.data.body.ShowResponseBody
 import dev.pimentel.shows.data.body.ShowSearchResponseBody
 import dev.pimentel.shows.data.dto.ShowDTO
+import dev.pimentel.shows.data.model.EpisodeModelImpl
 import dev.pimentel.shows.data.model.ShowInformationModelImpl
 import dev.pimentel.shows.data.model.ShowModelImpl
 import dev.pimentel.shows.data.model.ShowsPageModelImpl
 import dev.pimentel.shows.data.sources.local.ShowsLocalDataSource
 import dev.pimentel.shows.data.sources.remote.ShowsRemoteDataSource
+import dev.pimentel.shows.domain.model.EpisodeModel
 import dev.pimentel.shows.domain.model.ShowInformationModel
 import dev.pimentel.shows.domain.model.ShowModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
@@ -89,6 +92,13 @@ class ShowsRepositoryImpl(
 
     override suspend fun searchShowInformation(showId: Int) = getShowInformationPublisher.emit(showId)
 
+    override suspend fun getEpisodeInformation(showId: Int, seasonNumber: Int, episodeNumber: Int): EpisodeModel =
+        showsRemoteDataSource.getEpisodeInformation(
+            showId = showId,
+            seasonNumber = seasonNumber,
+            episodeNumber = episodeNumber
+        ).toModel()
+
     private fun List<ShowResponseBody>.mapAllToModel(favoriteIds: List<Int>) = map { show ->
         ShowModelImpl(
             id = show.id,
@@ -140,18 +150,20 @@ class ShowsRepositoryImpl(
                     days = schedule.days
                 )
             },
-            episodes = showInfo.embedded!!.episodes.map { episode ->
-                ShowInformationModelImpl.EpisodeModelImpl(
-                    id = episode.id,
-                    number = episode.number,
-                    season = episode.season,
-                    name = episode.name,
-                    summary = episode.summary,
-                    imageUrl = episode.image?.originalUrl,
-                    airDate = episode.airDate,
-                    airTime = episode.airTime
-                )
-            }
+            episodes = showInfo.embedded!!.episodes.map { episode -> episode.toModel() }
+        )
+    }
+
+    private fun EpisodeResponseBody.toModel() = let { episode ->
+        EpisodeModelImpl(
+            id = episode.id,
+            number = episode.number,
+            season = episode.season,
+            name = episode.name,
+            summary = episode.summary,
+            imageUrl = episode.image?.originalUrl,
+            airDate = episode.airDate,
+            airTime = episode.airTime
         )
     }
 

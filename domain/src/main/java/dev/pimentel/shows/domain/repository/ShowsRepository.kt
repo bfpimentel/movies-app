@@ -1,5 +1,6 @@
 package dev.pimentel.shows.domain.repository
 
+import dev.pimentel.shows.domain.model.EpisodeModel
 import dev.pimentel.shows.domain.model.ShowInformationModel
 import dev.pimentel.shows.domain.model.ShowModel
 import dev.pimentel.shows.domain.model.ShowsPageModel
@@ -15,4 +16,6 @@ interface ShowsRepository {
 
     fun getShowInformation(): Flow<ShowInformationModel>
     suspend fun searchShowInformation(showId: Int)
+
+    suspend fun getEpisodeInformation(showId: Int, seasonNumber: Int, episodeNumber: Int): EpisodeModel
 }
